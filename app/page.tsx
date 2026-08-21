@@ -105,7 +105,16 @@ export default function Home() {
     ["w1Margin", "上周毛利率"], ["w2Margin", "本周毛利率"], ["marginDelta", "毛利率环比(%)"], ["custW2", "下属客户"],
   ];
 
-  return <main className="dashboard-shell"><div className="dashboard-wrap">
+  return <main className="dashboard-shell">
+    <div className="ambient-background" aria-hidden="true">
+      <span className="ambient-glow glow-one" />
+      <span className="ambient-glow glow-two" />
+      <span className="ambient-orb orb-one" />
+      <span className="ambient-orb orb-two" />
+      <span className="ambient-orb orb-three" />
+      <span className="ambient-beam" />
+    </div>
+    <div className="dashboard-wrap">
     <header className="dashboard-header">
       <div><p className="eyebrow">BIWEEKLY SALES PULSE</p><h1>客户公司销售 · 双周环比看板</h1><p className="subtitle">按「客户公司」维度汇总 · 销售额与毛利率环比</p></div>
       <div className="period-chip"><span>对比周期</span><strong>08-07 ~ 08-13</strong><i>→</i><strong>08-14 ~ 08-20</strong></div>
