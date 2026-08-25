@@ -1,23 +1,56 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { companies, type Company } from "./data";
+import { companies, dashboardPeriod, type Company } from "./data";
 
-type Filter = "all" | "new" | "dropped" | "negative" | "down";
+type Filter = "all" | "new" | "dropped" | "negative" | "down" | "marginDown";
 type SortKey = "company" | "w1Sales" | "w2Sales" | "salesPct" | "w1Margin" | "w2Margin" | "marginDelta" | "custW2";
 
 const money = (value: number) => `¥${Math.round(value).toLocaleString("zh-CN")}`;
 const percent = (value: number) => `${(value * 100).toFixed(2)}%`;
 const signed = (value: number, digits = 1) => `${value > 0 ? "+" : ""}${value.toFixed(digits)}%`;
 const salesPct = (item: Company) => item.w1Sales ? (item.w2Sales - item.w1Sales) / item.w1Sales : Number.POSITIVE_INFINITY;
-const status = (item: Company) => item.isNew ? "新增" : item.isDropped ? "流失" : item.w2Sales < item.w1Sales ? "销售下滑" : "增长";
+const companyMarginDelta = (item: Company) => (item.w2Margin - item.w1Margin) * 100;
+const isNewCompany = (item: Company) => item.w1Sales <= 0 && item.w2Sales > 0;
+const isDroppedCompany = (item: Company) => item.w1Sales > 0 && item.w2Sales <= 0;
+const status = (item: Company) => isNewCompany(item) ? "新增" : isDroppedCompany(item) ? "流失" : item.w2Sales < item.w1Sales ? "销售下滑" : "增长";
+
+const totals = companies.reduce((sum, item) => ({
+  w1Sales: sum.w1Sales + item.w1Sales,
+  w2Sales: sum.w2Sales + item.w2Sales,
+  w1MarginAmount: sum.w1MarginAmount + item.w1Sales * item.w1Margin,
+  w2MarginAmount: sum.w2MarginAmount + item.w2Sales * item.w2Margin,
+}), { w1Sales: 0, w2Sales: 0, w1MarginAmount: 0, w2MarginAmount: 0 });
+
+const previousMarginRate = totals.w1Sales ? totals.w1MarginAmount / totals.w1Sales : 0;
+const currentMarginRate = totals.w2Sales ? totals.w2MarginAmount / totals.w2Sales : 0;
+const previousCompanyCount = companies.filter((item) => item.w1Sales > 0).length;
+const currentCompanyCount = companies.filter((item) => item.w2Sales > 0).length;
+const ratioChange = (current: number, previous: number) => previous ? (current - previous) / previous : 0;
+const metricTone = (value: number) => value < 0 ? "down" : "up";
 
 const metrics = [
-  { label: "本周销售额", value: "¥1,659,244", change: "+12.1% 环比", tone: "up", glyph: "¥" },
-  { label: "本周参考毛利额", value: "¥221,339", change: "+11.5% 环比", tone: "up", glyph: "利" },
-  { label: "本周毛利率", value: "13.34%", change: "-0.07% 环比", tone: "down", glyph: "%" },
-  { label: "客户公司数", value: "30", change: "+2 家 环比", tone: "up", glyph: "客" },
-] as const;
+  { label: "本周销售额", value: money(totals.w2Sales), change: `${signed(ratioChange(totals.w2Sales, totals.w1Sales) * 100)} 环比`, tone: metricTone(totals.w2Sales - totals.w1Sales), glyph: "¥" },
+  { label: "本周参考毛利额", value: money(totals.w2MarginAmount), change: `${signed(ratioChange(totals.w2MarginAmount, totals.w1MarginAmount) * 100)} 环比`, tone: metricTone(totals.w2MarginAmount - totals.w1MarginAmount), glyph: "利" },
+  { label: "本周毛利率", value: percent(currentMarginRate), change: `${signed((currentMarginRate - previousMarginRate) * 100, 2)} 环比`, tone: metricTone(currentMarginRate - previousMarginRate), glyph: "%" },
+  { label: "客户公司数", value: String(currentCompanyCount), change: `${currentCompanyCount - previousCompanyCount > 0 ? "+" : ""}${currentCompanyCount - previousCompanyCount} 家 环比`, tone: metricTone(currentCompanyCount - previousCompanyCount), glyph: "客" },
+];
+
+const summarizeCompanies = (items: Company[]) => items.length
+  ? `${items.slice(0, 2).map((item) => item.company).join("、")}${items.length > 2 ? " 等" : ""}`
+  : "无";
+
+const newCompanies = companies.filter(isNewCompany);
+const droppedCompanies = companies.filter(isDroppedCompany);
+const salesDownCompanies = companies.filter((item) => item.w2Sales < item.w1Sales);
+const marginDownCompanies = companies.filter((item) => companyMarginDelta(item) < 0);
+
+const alerts = [
+  { label: "新增公司", value: newCompanies.length, detail: summarizeCompanies(newCompanies), tone: "new", action: "new" as Filter },
+  { label: "流失公司", value: droppedCompanies.length, detail: summarizeCompanies(droppedCompanies), tone: "drop", action: "dropped" as Filter },
+  { label: "销售额下滑公司", value: salesDownCompanies.length, detail: summarizeCompanies(salesDownCompanies), tone: "sales", action: "down" as Filter },
+  { label: "毛利率下滑公司", value: marginDownCompanies.length, detail: summarizeCompanies(marginDownCompanies), tone: "margin", action: "marginDown" as Filter },
+];
 
 const backgrounds = [
   { label: "海浪", src: "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260629_030107_874273ea-684a-4e90-bb96-8fdfde48d53d.mp4" },
@@ -27,7 +60,7 @@ const backgrounds = [
 
 const filters: { key: Filter; label: string }[] = [
   { key: "all", label: "全部" }, { key: "new", label: "新增" }, { key: "dropped", label: "流失" },
-  { key: "negative", label: "负毛利" }, { key: "down", label: "下滑" },
+  { key: "negative", label: "负毛利" }, { key: "down", label: "销售下滑" }, { key: "marginDown", label: "毛利下滑" },
 ];
 
 function SectionTitle({ children, note }: { children: React.ReactNode; note?: string }) {
@@ -50,14 +83,14 @@ function SalesChart() {
 }
 
 function MarginDeltaChart() {
-  const rows = [...companies].sort((a, b) => Math.abs(b.marginDelta) - Math.abs(a.marginDelta)).slice(0, 8);
-  const max = Math.max(...rows.map((item) => Math.abs(item.marginDelta)));
+  const rows = [...companies].sort((a, b) => Math.abs(companyMarginDelta(b)) - Math.abs(companyMarginDelta(a))).slice(0, 8);
+  const max = Math.max(...rows.map((item) => Math.abs(companyMarginDelta(item))), 1);
   return <div className="delta-chart">
-    {rows.map((item) => <div className="delta-row" key={item.company}>
+    {rows.map((item) => { const delta = companyMarginDelta(item); return <div className="delta-row" key={item.company}>
       <span title={item.company}>{item.company}</span>
-      <div className="delta-track"><i className={item.marginDelta >= 0 ? "positive" : "negative"} style={{ width: `${Math.max(2, Math.abs(item.marginDelta) / max * 100)}%` }} /></div>
-      <b className={item.marginDelta >= 0 ? "up" : "down"}>{signed(item.marginDelta, 2)}</b>
-    </div>)}
+      <div className="delta-track"><i className={delta >= 0 ? "positive" : "negative"} style={{ width: `${Math.max(2, Math.abs(delta) / max * 100)}%` }} /></div>
+      <b className={delta >= 0 ? "up" : "down"}>{signed(delta, 2)}</b>
+    </div>; })}
   </div>;
 }
 
@@ -84,13 +117,14 @@ export default function Home() {
   const rows = useMemo(() => {
     const match = companies.filter((item) => {
       const byQuery = item.company.toLowerCase().includes(query.trim().toLowerCase());
-      const byFilter = filter === "all" || (filter === "new" && item.isNew) || (filter === "dropped" && item.isDropped)
-        || (filter === "negative" && item.w2Margin < 0) || (filter === "down" && item.w2Sales < item.w1Sales);
+      const byFilter = filter === "all" || (filter === "new" && isNewCompany(item)) || (filter === "dropped" && isDroppedCompany(item))
+        || (filter === "negative" && item.w2Margin < 0) || (filter === "down" && item.w2Sales < item.w1Sales)
+        || (filter === "marginDown" && companyMarginDelta(item) < 0);
       return byQuery && byFilter;
     });
     return match.sort((a, b) => {
-      const av = sortKey === "salesPct" ? salesPct(a) : a[sortKey];
-      const bv = sortKey === "salesPct" ? salesPct(b) : b[sortKey];
+      const av = sortKey === "salesPct" ? salesPct(a) : sortKey === "marginDelta" ? companyMarginDelta(a) : a[sortKey];
+      const bv = sortKey === "salesPct" ? salesPct(b) : sortKey === "marginDelta" ? companyMarginDelta(b) : b[sortKey];
       const result = typeof av === "string" ? av.localeCompare(String(bv), "zh-CN") : Number(av) - Number(bv);
       return ascending ? result : -result;
     });
@@ -100,13 +134,6 @@ export default function Home() {
     if (key === sortKey) setAscending((value) => !value);
     else { setSortKey(key); setAscending(false); }
   };
-
-  const alerts = [
-    { label: "新增公司", value: 2, detail: "631所、未央区教育局", tone: "new", action: "new" as Filter },
-    { label: "流失公司", value: 0, detail: "无", tone: "drop", action: "dropped" as Filter },
-    { label: "销售额下滑公司", value: 15, detail: "华润西京医院、中航电测", tone: "sales", action: "down" as Filter },
-    { label: "毛利率下滑公司", value: 14, detail: "中航电测、115厂", tone: "margin", action: "all" as Filter },
-  ];
 
   const headers: [SortKey, string][] = [
     ["company", "客户公司"], ["w1Sales", "上周销售额"], ["w2Sales", "本周销售额"], ["salesPct", "销售额环比"],
@@ -124,7 +151,7 @@ export default function Home() {
     <header className="dashboard-header">
       <div><p className="eyebrow">西安望家欢农业科技有限公司</p><h1>客户公司销售 · 双周环比看板</h1><p className="subtitle">按「客户公司」维度汇总 · 销售额与毛利率环比 · 点击公司行可下钻下属客户</p></div>
       <div className="header-controls">
-        <div className="period-chip"><span>对比周期</span><strong>08-07 ~ 08-13</strong><i>→</i><strong>08-14 ~ 08-20</strong></div>
+        <div className="period-chip"><span>对比周期</span><strong>{dashboardPeriod.previous}</strong><i>→</i><strong>{dashboardPeriod.current}</strong></div>
         <div className="background-switcher" aria-label="切换动态背景">
           {backgrounds.map((item, index) => <button type="button" key={item.label} className={background === index ? "active" : ""} onClick={() => setBackground(index)} aria-label={`切换背景：${item.label}`}><b>0{index + 1}</b><span>/ {item.label}</span></button>)}
         </div>
@@ -160,7 +187,7 @@ export default function Home() {
         <tbody>{rows.map((item) => { const change = salesPct(item); const itemStatus = status(item); return <tr className="clickable-row" key={item.company} tabIndex={0} aria-label={`查看${item.company}详情`} onClick={() => setSelectedCompany(item)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); setSelectedCompany(item); } }}>
           <td title={item.company}>{item.company}</td><td>{money(item.w1Sales)}</td><td><strong>{money(item.w2Sales)}</strong></td>
           <td className={change > 0 ? "up" : change < 0 ? "down" : "flat"}>{Number.isFinite(change) ? signed(change * 100) : "—"}</td>
-          <td>{percent(item.w1Margin)}</td><td>{percent(item.w2Margin)}</td><td className={item.marginDelta > 0 ? "up" : item.marginDelta < 0 ? "down" : "flat"}>{item.isNew ? "—" : signed(item.marginDelta, 2)}</td>
+          <td>{percent(item.w1Margin)}</td><td>{percent(item.w2Margin)}</td><td className={companyMarginDelta(item) > 0 ? "up" : companyMarginDelta(item) < 0 ? "down" : "flat"}>{isNewCompany(item) ? "—" : signed(companyMarginDelta(item), 2)}</td>
           <td>{item.custW1 === item.custW2 ? item.custW2 : `${item.custW1}→${item.custW2}`}</td><td><span className={`status-tag status-${itemStatus}`}>{itemStatus}</span></td>
         </tr>; })}</tbody>
       </table></div>
@@ -178,7 +205,7 @@ export default function Home() {
           <div><span>本周销售额</span><strong>{money(selectedCompany.w2Sales)}</strong></div>
           <div><span>销售额环比</span><strong className={salesPct(selectedCompany) >= 0 ? "up" : "down"}>{Number.isFinite(salesPct(selectedCompany)) ? signed(salesPct(selectedCompany) * 100) : "新增"}</strong></div>
           <div><span>本周毛利率</span><strong>{percent(selectedCompany.w2Margin)}</strong></div>
-          <div><span>毛利率环比</span><strong className={selectedCompany.marginDelta >= 0 ? "up" : "down"}>{selectedCompany.isNew ? "—" : signed(selectedCompany.marginDelta, 2)}</strong></div>
+          <div><span>毛利率环比</span><strong className={companyMarginDelta(selectedCompany) >= 0 ? "up" : "down"}>{isNewCompany(selectedCompany) ? "—" : signed(companyMarginDelta(selectedCompany), 2)}</strong></div>
         </div>
         <div className="customer-summary"><span>本周下属客户</span><strong>{selectedCompany.custW2} 家</strong><small>{selectedCompany.custW1 === selectedCompany.custW2 ? "客户数量保持稳定" : `上周 ${selectedCompany.custW1} 家 → 本周 ${selectedCompany.custW2} 家`}</small></div>
       </aside>
