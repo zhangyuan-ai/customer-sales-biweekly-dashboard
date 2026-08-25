@@ -122,7 +122,7 @@ export default function Home() {
     </div>
     <div className="dashboard-wrap">
     <header className="dashboard-header">
-      <div><p className="eyebrow">AI-POWERED SALES INTELLIGENCE</p><h1>客户公司销售 · 双周环比看板</h1><p className="subtitle">按「客户公司」维度汇总 · 销售额与毛利率环比 · 点击公司行可下钻下属客户</p></div>
+      <div><p className="eyebrow">西安望家欢农业科技有限公司</p><h1>客户公司销售 · 双周环比看板</h1><p className="subtitle">按「客户公司」维度汇总 · 销售额与毛利率环比 · 点击公司行可下钻下属客户</p></div>
       <div className="header-controls">
         <div className="period-chip"><span>对比周期</span><strong>08-07 ~ 08-13</strong><i>→</i><strong>08-14 ~ 08-20</strong></div>
         <div className="background-switcher" aria-label="切换动态背景">
@@ -143,9 +143,9 @@ export default function Home() {
       <SectionTitle note="销售规模、毛利率波动与高低位公司一屏对比">公司销售与毛利率可视化</SectionTitle>
       <div className="chart-grid">
         <article className="chart-card chart-wide"><div className="chart-heading"><h3>销售额 TOP 8</h3><div className="legend"><span><i className="old" />上周</span><span><i className="current" />本周</span></div></div><SalesChart /></article>
-        <article className="chart-card"><div className="chart-heading"><h3>毛利率波动聚焦</h3><small>百分点</small></div><MarginDeltaChart /></article>
-        <article className="chart-card"><div className="chart-heading"><h3>本周毛利率最高 Top 10</h3><small className="rank-green">高位</small></div><MarginRank high /></article>
+        <article className="chart-card chart-wide"><div className="chart-heading"><h3>毛利率波动聚焦</h3><small>百分点</small></div><MarginDeltaChart /></article>
         <article className="chart-card"><div className="chart-heading"><h3>本周毛利率最低 Top 10</h3><small className="rank-red">低位</small></div><MarginRank high={false} /></article>
+        <article className="chart-card"><div className="chart-heading"><h3>本周毛利率最高 Top 10</h3><small className="rank-green">高位</small></div><MarginRank high /></article>
       </div>
     </section>
 
