@@ -94,14 +94,14 @@ h1 { margin: 0; font-size: clamp(24px, 3vw, 34px); line-height: 1.16; letter-spa
 .metric-card p, .alert-card p { margin: 0; color: var(--sub); font-size: 12px; }
 .metric-card strong { display: block; margin: 3px 0 6px; font-size: clamp(22px, 2.5vw, 28px); line-height: 1.2; letter-spacing: -.035em; }
 .metric-card span { font-size: 12px; font-weight: 700; }
-.up { color: var(--red); }
-.down { color: var(--green); }
+.up { color: var(--green); }
+.down { color: var(--red); }
 .alert-card { padding: 15px 16px; border-radius: 15px; border-left: 4px solid var(--line); transition: transform .18s ease, box-shadow .18s ease; }
 .alert-card:hover { transform: translateY(-2px); box-shadow: 0 14px 34px rgba(31,39,51,.11); }
 .alert-card strong { display: block; margin: 2px 0; font-size: 22px; }
 .alert-card span { display: block; overflow: hidden; color: var(--sub); font-size: 11.5px; text-overflow: ellipsis; white-space: nowrap; }
 .alert-new { border-left-color: var(--blue); }
-.alert-sales { border-left-color: var(--green); }
+.alert-sales { border-left-color: var(--red); }
 .alert-margin { border-left-color: var(--amber); }
 .preview-section { min-height: 220px; padding: 20px; border-radius: 18px; }
 .preview-section > div { display: flex; align-items: center; gap: 9px; }
@@ -150,8 +150,8 @@ button { color: inherit; }
 .delta-row { display: grid; grid-template-columns: minmax(90px, 1.4fr) minmax(100px, 2fr) 58px; align-items: center; gap: 8px; }
 .delta-track { height: 7px; overflow: hidden; border-radius: 99px; background: #eef1f6; }
 .delta-track i { display: block; height: 100%; border-radius: inherit; }
-.delta-track .positive { background: linear-gradient(90deg, #ff8e9a, var(--red)); }
-.delta-track .negative { background: linear-gradient(90deg, #78d7a4, var(--green)); }
+.delta-track .positive { background: linear-gradient(90deg, #78d7a4, var(--green)); }
+.delta-track .negative { background: linear-gradient(90deg, #ff8e9a, var(--red)); }
 .delta-row b { font-size: 10.5px; text-align: right; }
 
 .rank-green { color: var(--green) !important; }
@@ -191,8 +191,8 @@ td strong { font-weight: 700; }
 .status-tag { display: inline-block; padding: 3px 8px; border-radius: 999px; font-size: 10px; font-weight: 700; }
 .status-新增 { background: #e8f0ff; color: var(--blue); }
 .status-流失 { background: #eef0f3; color: var(--sub); }
-.status-销售下滑 { background: #e7f7ee; color: var(--green); }
-.status-增长 { background: #fdeef0; color: var(--red); }
+.status-销售下滑 { background: #fdeef0; color: var(--red); }
+.status-增长 { background: #e7f7ee; color: var(--green); }
 .empty-state { padding: 42px; color: var(--sub); text-align: center; font-size: 13px; }
 footer { padding: 4px 0 10px; color: #8d96a4; font-size: 11px; text-align: center; }
 
@@ -404,8 +404,8 @@ footer { padding: 4px 0 10px; color: #8d96a4; font-size: 11px; text-align: cente
 .reference-theme .bar-new { background: linear-gradient(90deg, #57a9ff, #2d7cff); box-shadow: 0 0 16px rgba(61,141,255,.32); }
 .reference-theme .delta-track,
 .reference-theme .rank-list div { background: rgba(255,255,255,.075); }
-.reference-theme .delta-track .positive { background: linear-gradient(90deg, #ff8aab, #ff3f76); box-shadow: 0 0 15px rgba(255,63,118,.32); }
-.reference-theme .delta-track .negative { background: linear-gradient(90deg, #57e3a1, #1dbd77); box-shadow: 0 0 15px rgba(29,189,119,.28); }
+.reference-theme .delta-track .positive { background: linear-gradient(90deg, #57e3a1, #1dbd77); box-shadow: 0 0 15px rgba(29,189,119,.28); }
+.reference-theme .delta-track .negative { background: linear-gradient(90deg, #ff8aab, #ff3f76); box-shadow: 0 0 15px rgba(255,63,118,.32); }
 .reference-theme .rank-list em { background: rgba(255,255,255,.08); color: rgba(255,255,255,.64); }
 .reference-theme .rank-high { background: linear-gradient(90deg, #4fe0a0, #1eba76); }
 .reference-theme .rank-low { background: linear-gradient(90deg, #ff8da9, #ff426f); }
@@ -429,13 +429,13 @@ footer { padding: 4px 0 10px; color: #8d96a4; font-size: 11px; text-align: cente
 .reference-theme td strong { color: #fff; }
 .reference-theme .status-新增 { background: rgba(45,128,255,.2); color: #89c8ff; }
 .reference-theme .status-流失 { background: rgba(255,255,255,.09); color: rgba(255,255,255,.6); }
-.reference-theme .status-销售下滑 { background: rgba(35,196,128,.16); color: #70e6ac; }
-.reference-theme .status-增长 { background: rgba(255,67,113,.16); color: #ff92ad; }
+.reference-theme .status-销售下滑 { background: rgba(255,67,113,.16); color: #ff92ad; }
+.reference-theme .status-增长 { background: rgba(35,196,128,.16); color: #70e6ac; }
 .reference-theme .clickable-row { cursor: pointer; }
 .reference-theme footer { color: rgba(255,255,255,.45); }
 
 .company-drawer-backdrop { position: fixed; inset: 0; z-index: 50; display: flex; align-items: stretch; justify-content: flex-end; background: rgba(0,0,0,.52); backdrop-filter: blur(8px); }
-.company-drawer { width: min(430px, 92vw); padding: 28px; border-left: 1px solid rgba(255,255,255,.16); background: linear-gradient(160deg, rgba(13,25,52,.86), rgba(4,7,18,.91)); box-shadow: -22px 0 60px rgba(0,0,0,.42), inset 1px 0 0 rgba(255,255,255,.08); color: #fff; backdrop-filter: blur(34px) saturate(1.45); }
+.company-drawer { width: min(470px, 94vw); overflow-y: auto; padding: 28px; border-left: 1px solid rgba(255,255,255,.16); background: linear-gradient(160deg, rgba(13,25,52,.86), rgba(4,7,18,.91)); box-shadow: -22px 0 60px rgba(0,0,0,.42), inset 1px 0 0 rgba(255,255,255,.08); color: #fff; backdrop-filter: blur(34px) saturate(1.45); }
 .drawer-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; }
 .drawer-heading p { margin: 0 0 8px; color: #55d8ff; font-size: 10px; font-weight: 750; letter-spacing: .15em; }
 .drawer-heading h2 { margin: 0; font-size: 25px; }
@@ -451,6 +451,20 @@ footer { padding: 4px 0 10px; color: #8d96a4; font-size: 11px; text-align: cente
 .customer-summary { margin-top: 12px; }
 .customer-summary strong { display: block; margin: 7px 0 5px; font-size: 25px; }
 .customer-summary small { color: rgba(255,255,255,.58); }
+.customer-list-section { margin-top: 12px; padding: 16px; border: 1px solid rgba(255,255,255,.11); border-radius: 15px; background: rgba(255,255,255,.055); box-shadow: inset 0 1px 0 rgba(255,255,255,.08); }
+.customer-list-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.customer-list-heading span { display: block; font-size: 13px; font-weight: 700; }
+.customer-list-heading small { display: block; margin-top: 3px; color: rgba(255,255,255,.48); font-size: 10px; }
+.customer-list-heading > b { display: grid; place-items: center; min-width: 30px; height: 30px; border-radius: 9px; background: rgba(71,177,255,.16); color: #8edbff; font-size: 12px; }
+.customer-list-section ul { display: grid; gap: 8px; margin: 14px 0 0; padding: 0; list-style: none; }
+.customer-list-section li { display: grid; grid-template-columns: 25px minmax(0,1fr) auto; align-items: start; gap: 9px; padding: 10px; border: 1px solid rgba(255,255,255,.075); border-radius: 11px; background: rgba(2,7,18,.28); }
+.customer-list-section li i { display: grid; place-items: center; width: 25px; height: 25px; border-radius: 7px; background: rgba(255,255,255,.075); color: rgba(255,255,255,.55); font-size: 9px; font-style: normal; font-weight: 750; }
+.customer-list-section li span { color: rgba(255,255,255,.82); font-size: 11px; line-height: 1.55; overflow-wrap: anywhere; }
+.customer-list-section li em { padding: 3px 7px; border-radius: 999px; background: rgba(35,196,128,.16); color: #70e6ac; font-size: 9px; font-style: normal; font-weight: 750; }
+.customer-list-empty { margin: 14px 0 0; padding: 14px; border-radius: 10px; background: rgba(255,255,255,.04); color: rgba(255,255,255,.5); font-size: 11px; text-align: center; }
+.inactive-customers { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,.09); }
+.inactive-customers strong { width: 100%; color: #ff9bb3; font-size: 10px; }
+.inactive-customers span { padding: 5px 8px; border-radius: 8px; background: rgba(255,67,113,.1); color: rgba(255,255,255,.64); font-size: 9px; }
 
 @media (max-width: 520px) {
   .company-drawer { width: 100%; padding: 22px; }

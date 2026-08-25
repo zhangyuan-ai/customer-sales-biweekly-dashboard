@@ -10,7 +10,9 @@ const money = (value: number) => `¥${Math.round(value).toLocaleString("zh-CN")}
 const percent = (value: number) => `${(value * 100).toFixed(2)}%`;
 const signed = (value: number, digits = 1) => `${value > 0 ? "+" : ""}${value.toFixed(digits)}%`;
 const salesPct = (item: Company) => item.w1Sales ? (item.w2Sales - item.w1Sales) / item.w1Sales : Number.POSITIVE_INFINITY;
-const companyMarginDelta = (item: Company) => (item.w2Margin - item.w1Margin) * 100;
+const previousMargin = (item: Company) => item.w1Sales ? item.w1MarginAmount / item.w1Sales : 0;
+const currentMargin = (item: Company) => item.w2Sales ? item.w2MarginAmount / item.w2Sales : 0;
+const companyMarginDelta = (item: Company) => (currentMargin(item) - previousMargin(item)) * 100;
 const isNewCompany = (item: Company) => item.w1Sales <= 0 && item.w2Sales > 0;
 const isDroppedCompany = (item: Company) => item.w1Sales > 0 && item.w2Sales <= 0;
 const status = (item: Company) => isNewCompany(item) ? "新增" : isDroppedCompany(item) ? "流失" : item.w2Sales < item.w1Sales ? "销售下滑" : "增长";
@@ -18,8 +20,8 @@ const status = (item: Company) => isNewCompany(item) ? "新增" : isDroppedCompa
 const totals = companies.reduce((sum, item) => ({
   w1Sales: sum.w1Sales + item.w1Sales,
   w2Sales: sum.w2Sales + item.w2Sales,
-  w1MarginAmount: sum.w1MarginAmount + item.w1Sales * item.w1Margin,
-  w2MarginAmount: sum.w2MarginAmount + item.w2Sales * item.w2Margin,
+  w1MarginAmount: sum.w1MarginAmount + item.w1MarginAmount,
+  w2MarginAmount: sum.w2MarginAmount + item.w2MarginAmount,
 }), { w1Sales: 0, w2Sales: 0, w1MarginAmount: 0, w2MarginAmount: 0 });
 
 const previousMarginRate = totals.w1Sales ? totals.w1MarginAmount / totals.w1Sales : 0;
@@ -53,9 +55,9 @@ const alerts = [
 ];
 
 const backgrounds = [
-  { label: "海浪", src: "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260629_030107_874273ea-684a-4e90-bb96-8fdfde48d53d.mp4" },
-  { label: "网格波", src: "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260629_032424_3c9c2a9d-807b-4482-80e6-dd6d9dfd4545.mp4" },
-  { label: "光隧道", src: "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260627_094019_4214ea73-b963-46a4-8327-61489192de99.mp4" },
+  { label: "背景 1", src: "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260629_030107_874273ea-684a-4e90-bb96-8fdfde48d53d.mp4" },
+  { label: "背景 2", src: "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260629_032424_3c9c2a9d-807b-4482-80e6-dd6d9dfd4545.mp4" },
+  { label: "背景 3", src: "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260627_094019_4214ea73-b963-46a4-8327-61489192de99.mp4" },
 ] as const;
 
 const filters: { key: Filter; label: string }[] = [
@@ -95,13 +97,13 @@ function MarginDeltaChart() {
 }
 
 function MarginRank({ high }: { high: boolean }) {
-  const rows = [...companies].sort((a, b) => high ? b.w2Margin - a.w2Margin : a.w2Margin - b.w2Margin).slice(0, 10);
-  const max = Math.max(...rows.map((item) => item.w2Margin));
+  const rows = [...companies].sort((a, b) => high ? currentMargin(b) - currentMargin(a) : currentMargin(a) - currentMargin(b)).slice(0, 10);
+  const max = Math.max(...rows.map(currentMargin), 0.01);
   return <ol className="rank-list">
     {rows.map((item, index) => <li key={item.company}>
       <em>{index + 1}</em><span title={item.company}>{item.company}</span>
-      <div><i className={high ? "rank-high" : "rank-low"} style={{ width: `${Math.max(3, item.w2Margin / max * 100)}%` }} /></div>
-      <b>{percent(item.w2Margin)}</b>
+      <div><i className={high ? "rank-high" : "rank-low"} style={{ width: `${Math.max(3, currentMargin(item) / max * 100)}%` }} /></div>
+      <b>{percent(currentMargin(item))}</b>
     </li>)}
   </ol>;
 }
@@ -118,13 +120,17 @@ export default function Home() {
     const match = companies.filter((item) => {
       const byQuery = item.company.toLowerCase().includes(query.trim().toLowerCase());
       const byFilter = filter === "all" || (filter === "new" && isNewCompany(item)) || (filter === "dropped" && isDroppedCompany(item))
-        || (filter === "negative" && item.w2Margin < 0) || (filter === "down" && item.w2Sales < item.w1Sales)
+        || (filter === "negative" && currentMargin(item) < 0) || (filter === "down" && item.w2Sales < item.w1Sales)
         || (filter === "marginDown" && companyMarginDelta(item) < 0);
       return byQuery && byFilter;
     });
     return match.sort((a, b) => {
-      const av = sortKey === "salesPct" ? salesPct(a) : sortKey === "marginDelta" ? companyMarginDelta(a) : a[sortKey];
-      const bv = sortKey === "salesPct" ? salesPct(b) : sortKey === "marginDelta" ? companyMarginDelta(b) : b[sortKey];
+      const av = sortKey === "salesPct" ? salesPct(a) : sortKey === "marginDelta" ? companyMarginDelta(a)
+        : sortKey === "w1Margin" ? previousMargin(a) : sortKey === "w2Margin" ? currentMargin(a)
+          : sortKey === "custW2" ? a.w2Customers.length : a[sortKey];
+      const bv = sortKey === "salesPct" ? salesPct(b) : sortKey === "marginDelta" ? companyMarginDelta(b)
+        : sortKey === "w1Margin" ? previousMargin(b) : sortKey === "w2Margin" ? currentMargin(b)
+          : sortKey === "custW2" ? b.w2Customers.length : b[sortKey];
       const result = typeof av === "string" ? av.localeCompare(String(bv), "zh-CN") : Number(av) - Number(bv);
       return ascending ? result : -result;
     });
@@ -134,6 +140,11 @@ export default function Home() {
     if (key === sortKey) setAscending((value) => !value);
     else { setSortKey(key); setAscending(false); }
   };
+
+  const currentCustomers = selectedCompany?.w2Customers ?? [];
+  const previousCustomers = selectedCompany?.w1Customers ?? [];
+  const addedCustomers = currentCustomers.filter((name) => !previousCustomers.includes(name));
+  const inactiveCustomers = previousCustomers.filter((name) => !currentCustomers.includes(name));
 
   const headers: [SortKey, string][] = [
     ["company", "客户公司"], ["w1Sales", "上周销售额"], ["w2Sales", "本周销售额"], ["salesPct", "销售额环比"],
@@ -149,11 +160,11 @@ export default function Home() {
     </div>
     <div className="dashboard-wrap">
     <header className="dashboard-header">
-      <div><p className="eyebrow">西安望家欢农业科技有限公司</p><h1>客户公司销售 · 双周环比看板</h1><p className="subtitle">按「客户公司」维度汇总 · 销售额与毛利率环比 · 点击公司行可下钻下属客户</p></div>
+      <div><p className="eyebrow">西安望家欢农业科技有限公司</p><h1>客户公司销售 · 双周环比看板</h1><p className="subtitle">按「客户公司」维度汇总 · 销售额与毛利率环比 · 点击公司行查看下属客户名单</p></div>
       <div className="header-controls">
         <div className="period-chip"><span>对比周期</span><strong>{dashboardPeriod.previous}</strong><i>→</i><strong>{dashboardPeriod.current}</strong></div>
         <div className="background-switcher" aria-label="切换动态背景">
-          {backgrounds.map((item, index) => <button type="button" key={item.label} className={background === index ? "active" : ""} onClick={() => setBackground(index)} aria-label={`切换背景：${item.label}`}><b>0{index + 1}</b><span>/ {item.label}</span></button>)}
+          {backgrounds.map((item, index) => <button type="button" key={item.label} className={background === index ? "active" : ""} onClick={() => setBackground(index)} aria-label={`切换至${item.label}`}><b>{item.label}</b></button>)}
         </div>
       </div>
     </header>
@@ -187,8 +198,8 @@ export default function Home() {
         <tbody>{rows.map((item) => { const change = salesPct(item); const itemStatus = status(item); return <tr className="clickable-row" key={item.company} tabIndex={0} aria-label={`查看${item.company}详情`} onClick={() => setSelectedCompany(item)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); setSelectedCompany(item); } }}>
           <td title={item.company}>{item.company}</td><td>{money(item.w1Sales)}</td><td><strong>{money(item.w2Sales)}</strong></td>
           <td className={change > 0 ? "up" : change < 0 ? "down" : "flat"}>{Number.isFinite(change) ? signed(change * 100) : "—"}</td>
-          <td>{percent(item.w1Margin)}</td><td>{percent(item.w2Margin)}</td><td className={companyMarginDelta(item) > 0 ? "up" : companyMarginDelta(item) < 0 ? "down" : "flat"}>{isNewCompany(item) ? "—" : signed(companyMarginDelta(item), 2)}</td>
-          <td>{item.custW1 === item.custW2 ? item.custW2 : `${item.custW1}→${item.custW2}`}</td><td><span className={`status-tag status-${itemStatus}`}>{itemStatus}</span></td>
+          <td>{percent(previousMargin(item))}</td><td>{percent(currentMargin(item))}</td><td className={companyMarginDelta(item) > 0 ? "up" : companyMarginDelta(item) < 0 ? "down" : "flat"}>{isNewCompany(item) ? "—" : signed(companyMarginDelta(item), 2)}</td>
+          <td>{item.w1Customers.length === item.w2Customers.length ? item.w2Customers.length : `${item.w1Customers.length}→${item.w2Customers.length}`}</td><td><span className={`status-tag status-${itemStatus}`}>{itemStatus}</span></td>
         </tr>; })}</tbody>
       </table></div>
       {!rows.length && <div className="empty-state">没有符合当前条件的客户公司</div>}
@@ -204,10 +215,16 @@ export default function Home() {
         <div className="drawer-metrics">
           <div><span>本周销售额</span><strong>{money(selectedCompany.w2Sales)}</strong></div>
           <div><span>销售额环比</span><strong className={salesPct(selectedCompany) >= 0 ? "up" : "down"}>{Number.isFinite(salesPct(selectedCompany)) ? signed(salesPct(selectedCompany) * 100) : "新增"}</strong></div>
-          <div><span>本周毛利率</span><strong>{percent(selectedCompany.w2Margin)}</strong></div>
+          <div><span>本周毛利率</span><strong>{percent(currentMargin(selectedCompany))}</strong></div>
           <div><span>毛利率环比</span><strong className={companyMarginDelta(selectedCompany) >= 0 ? "up" : "down"}>{isNewCompany(selectedCompany) ? "—" : signed(companyMarginDelta(selectedCompany), 2)}</strong></div>
         </div>
-        <div className="customer-summary"><span>本周下属客户</span><strong>{selectedCompany.custW2} 家</strong><small>{selectedCompany.custW1 === selectedCompany.custW2 ? "客户数量保持稳定" : `上周 ${selectedCompany.custW1} 家 → 本周 ${selectedCompany.custW2} 家`}</small></div>
+        <div className="customer-summary"><span>本周下属客户</span><strong>{currentCustomers.length} 家</strong><small>{previousCustomers.length === currentCustomers.length ? "客户数量保持稳定" : `上周 ${previousCustomers.length} 家 → 本周 ${currentCustomers.length} 家`}</small></div>
+        <section className="customer-list-section" aria-label="下属客户名称">
+          <div className="customer-list-heading"><div><span>本周客户名称</span><small>来源于客户销售报表</small></div><b>{currentCustomers.length}</b></div>
+          {currentCustomers.length ? <ul>{currentCustomers.map((name, index) => <li key={name}><i>{String(index + 1).padStart(2, "0")}</i><span>{name}</span>{addedCustomers.includes(name) && <em>新增</em>}</li>)}</ul>
+            : <p className="customer-list-empty">本周没有客户销售记录</p>}
+          {inactiveCustomers.length > 0 && <div className="inactive-customers"><strong>本周未出现</strong>{inactiveCustomers.map((name) => <span key={name}>{name}</span>)}</div>}
+        </section>
       </aside>
     </div>}
 
