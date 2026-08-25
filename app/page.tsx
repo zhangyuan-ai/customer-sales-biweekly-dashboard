@@ -184,6 +184,6 @@ export default function Home() {
       </aside>
     </div>}
 
-    <footer>数据已内嵌于本页 · 离线可用（视频需联网，加载失败时自动回退黑底）</footer>
+    <footer>西安望家欢毛利环比（此网页用AI搭建部署）</footer>
   </div></main>;
 }
