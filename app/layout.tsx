@@ -12,7 +12,7 @@ export const metadata: Metadata = {
     description: '销售额、参考毛利额与毛利率双周对比',
     type: 'website',
     images: process.env.SITE_ORIGIN
-      ? [{ url: new URL('/og.png', process.env.SITE_ORIGIN).toString(), width: 1728, height: 909, alt: '客户公司销售双周环比看板' }]
+      ? [{ url: new URL('/og.png', process.env.SITE_ORIGIN).toString(), width: 1672, height: 941, alt: '客户公司销售双周环比看板' }]
       : [],
   },
   twitter: {

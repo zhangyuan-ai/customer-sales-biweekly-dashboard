@@ -19,6 +19,12 @@ const metrics = [
   { label: "客户公司数", value: "30", change: "+2 家 环比", tone: "up", glyph: "客" },
 ] as const;
 
+const backgrounds = [
+  { label: "海浪", src: "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260629_030107_874273ea-684a-4e90-bb96-8fdfde48d53d.mp4" },
+  { label: "网格波", src: "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260629_032424_3c9c2a9d-807b-4482-80e6-dd6d9dfd4545.mp4" },
+  { label: "光隧道", src: "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260627_094019_4214ea73-b963-46a4-8327-61489192de99.mp4" },
+] as const;
+
 const filters: { key: Filter; label: string }[] = [
   { key: "all", label: "全部" }, { key: "new", label: "新增" }, { key: "dropped", label: "流失" },
   { key: "negative", label: "负毛利" }, { key: "down", label: "下滑" },
@@ -68,6 +74,8 @@ function MarginRank({ high }: { high: boolean }) {
 }
 
 export default function Home() {
+  const [background, setBackground] = useState(0);
+  const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<Filter>("all");
   const [sortKey, setSortKey] = useState<SortKey>("w2Sales");
@@ -105,19 +113,22 @@ export default function Home() {
     ["w1Margin", "上周毛利率"], ["w2Margin", "本周毛利率"], ["marginDelta", "毛利率环比(%)"], ["custW2", "下属客户"],
   ];
 
-  return <main className="dashboard-shell">
-    <div className="ambient-background" aria-hidden="true">
-      <span className="ambient-glow glow-one" />
-      <span className="ambient-glow glow-two" />
-      <span className="ambient-orb orb-one" />
-      <span className="ambient-orb orb-two" />
-      <span className="ambient-orb orb-three" />
-      <span className="ambient-beam" />
+  return <main className="dashboard-shell reference-theme">
+    <div className="video-background" aria-hidden="true">
+      <video key={background} autoPlay muted loop playsInline>
+        <source src={backgrounds[background].src} type="video/mp4" />
+      </video>
+      <span />
     </div>
     <div className="dashboard-wrap">
     <header className="dashboard-header">
-      <div><p className="eyebrow">BIWEEKLY SALES PULSE</p><h1>客户公司销售 · 双周环比看板</h1><p className="subtitle">按「客户公司」维度汇总 · 销售额与毛利率环比</p></div>
-      <div className="period-chip"><span>对比周期</span><strong>08-07 ~ 08-13</strong><i>→</i><strong>08-14 ~ 08-20</strong></div>
+      <div><p className="eyebrow">AI-POWERED SALES INTELLIGENCE</p><h1>客户公司销售 · 双周环比看板</h1><p className="subtitle">按「客户公司」维度汇总 · 销售额与毛利率环比 · 点击公司行可下钻下属客户</p></div>
+      <div className="header-controls">
+        <div className="period-chip"><span>对比周期</span><strong>08-07 ~ 08-13</strong><i>→</i><strong>08-14 ~ 08-20</strong></div>
+        <div className="background-switcher" aria-label="切换动态背景">
+          {backgrounds.map((item, index) => <button type="button" key={item.label} className={background === index ? "active" : ""} onClick={() => setBackground(index)} aria-label={`切换背景：${item.label}`}><b>0{index + 1}</b><span>/ {item.label}</span></button>)}
+        </div>
+      </div>
     </header>
 
     <section className="metric-grid" aria-label="核心指标">{metrics.map((metric, index) => <article className="metric-card" key={metric.label}>
@@ -146,7 +157,7 @@ export default function Home() {
         <span className="row-count">共 {rows.length} 家公司</span>
       </div>
       <div className="table-scroll"><table><thead><tr>{headers.map(([key, label]) => <th key={key}><button type="button" onClick={() => sortBy(key)}>{label}<span>{sortKey === key ? ascending ? "↑" : "↓" : "↕"}</span></button></th>)}<th>状态</th></tr></thead>
-        <tbody>{rows.map((item) => { const change = salesPct(item); const itemStatus = status(item); return <tr key={item.company}>
+        <tbody>{rows.map((item) => { const change = salesPct(item); const itemStatus = status(item); return <tr className="clickable-row" key={item.company} tabIndex={0} aria-label={`查看${item.company}详情`} onClick={() => setSelectedCompany(item)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); setSelectedCompany(item); } }}>
           <td title={item.company}>{item.company}</td><td>{money(item.w1Sales)}</td><td><strong>{money(item.w2Sales)}</strong></td>
           <td className={change > 0 ? "up" : change < 0 ? "down" : "flat"}>{Number.isFinite(change) ? signed(change * 100) : "—"}</td>
           <td>{percent(item.w1Margin)}</td><td>{percent(item.w2Margin)}</td><td className={item.marginDelta > 0 ? "up" : item.marginDelta < 0 ? "down" : "flat"}>{item.isNew ? "—" : signed(item.marginDelta, 2)}</td>
@@ -156,6 +167,23 @@ export default function Home() {
       {!rows.length && <div className="empty-state">没有符合当前条件的客户公司</div>}
     </section>
 
-    <footer>数据来源：客户销售报表 · 2026-08-07 至 2026-08-20</footer>
+    {selectedCompany && <div className="company-drawer-backdrop" role="presentation" onClick={() => setSelectedCompany(null)}>
+      <aside className="company-drawer" role="dialog" aria-modal="true" aria-labelledby="company-detail-title" onClick={(event) => event.stopPropagation()}>
+        <div className="drawer-heading">
+          <div><p>COMPANY DEEP DIVE</p><h2 id="company-detail-title">{selectedCompany.company}</h2></div>
+          <button type="button" onClick={() => setSelectedCompany(null)} aria-label="关闭公司详情">×</button>
+        </div>
+        <span className={`drawer-status status-tag status-${status(selectedCompany)}`}>{status(selectedCompany)}</span>
+        <div className="drawer-metrics">
+          <div><span>本周销售额</span><strong>{money(selectedCompany.w2Sales)}</strong></div>
+          <div><span>销售额环比</span><strong className={salesPct(selectedCompany) >= 0 ? "up" : "down"}>{Number.isFinite(salesPct(selectedCompany)) ? signed(salesPct(selectedCompany) * 100) : "新增"}</strong></div>
+          <div><span>本周毛利率</span><strong>{percent(selectedCompany.w2Margin)}</strong></div>
+          <div><span>毛利率环比</span><strong className={selectedCompany.marginDelta >= 0 ? "up" : "down"}>{selectedCompany.isNew ? "—" : signed(selectedCompany.marginDelta, 2)}</strong></div>
+        </div>
+        <div className="customer-summary"><span>本周下属客户</span><strong>{selectedCompany.custW2} 家</strong><small>{selectedCompany.custW1 === selectedCompany.custW2 ? "客户数量保持稳定" : `上周 ${selectedCompany.custW1} 家 → 本周 ${selectedCompany.custW2} 家`}</small></div>
+      </aside>
+    </div>}
+
+    <footer>数据已内嵌于本页 · 离线可用（视频需联网，加载失败时自动回退黑底）</footer>
   </div></main>;
 }
