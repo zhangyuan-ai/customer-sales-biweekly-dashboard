@@ -1,0 +1,30 @@
+{
+  "periods": [
+    {
+      "start": "2026-07-01",
+      "end": "2026-07-31",
+      "label": "2026年7月",
+      "daysCovered": 31,
+      "daysInMonth": 31,
+      "isPartial": false,
+      "sales": 6493252.39,
+      "marginAmount": 963891.8,
+      "marginRate": 0.148445,
+      "companyCount": 34,
+      "customerCount": 66
+    },
+    {
+      "start": "2026-08-01",
+      "end": "2026-08-26",
+      "label": "2026年8月（截至26日）",
+      "daysCovered": 26,
+      "daysInMonth": 31,
+      "isPartial": true,
+      "sales": 5638641.98,
+      "marginAmount": 723007.15,
+      "marginRate": 0.128224,
+      "companyCount": 31,
+      "customerCount": 54
+    }
+  ]
+}

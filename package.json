@@ -10,6 +10,7 @@
     "build": "vinext build",
     "build:pages": "next build",
     "update:data": "python scripts/update-dashboard-data.py",
+    "update:monthly": "python scripts/update-dashboard-data.py --mode monthly",
     "start": "vinext start",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next"
   },

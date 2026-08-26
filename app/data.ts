@@ -1,5 +1,7 @@
-import dashboardSource from "./dashboard-data.json";
-import historySource from "./dashboard-history.json";
+import weeklySource from "./dashboard-data.json";
+import weeklyHistorySource from "./dashboard-history.json";
+import monthlySource from "./monthly-dashboard-data.json";
+import monthlyHistorySource from "./monthly-dashboard-history.json";
 
 export type Customer = {
   name: string;
@@ -18,10 +20,16 @@ export type Company = {
   customers: Customer[];
 };
 
-export type HistoryPeriod = {
+export type DashboardPeriod = {
   start: string;
   end: string;
   label: string;
+  daysCovered?: number;
+  daysInMonth?: number;
+  isPartial?: boolean;
+};
+
+export type HistoryPeriod = DashboardPeriod & {
   sales: number;
   marginAmount: number;
   marginRate: number;
@@ -29,11 +37,29 @@ export type HistoryPeriod = {
   customerCount: number;
 };
 
-export const dashboardPeriod = {
-  previous: dashboardSource.previous.label,
-  current: dashboardSource.current.label,
-} as const;
+export type DashboardDataset = {
+  mode: "weekly" | "monthly";
+  generatedAt: string;
+  previous: DashboardPeriod;
+  current: DashboardPeriod;
+  companies: Company[];
+  history: HistoryPeriod[];
+};
 
-export const generatedAt = dashboardSource.generatedAt;
-export const companies = dashboardSource.companies as Company[];
-export const dashboardHistory = historySource.periods as HistoryPeriod[];
+export const weeklyDashboard: DashboardDataset = {
+  mode: "weekly",
+  generatedAt: weeklySource.generatedAt,
+  previous: weeklySource.previous,
+  current: weeklySource.current,
+  companies: weeklySource.companies as Company[],
+  history: weeklyHistorySource.periods as HistoryPeriod[],
+};
+
+export const monthlyDashboard: DashboardDataset = {
+  mode: "monthly",
+  generatedAt: monthlySource.generatedAt,
+  previous: monthlySource.previous,
+  current: monthlySource.current,
+  companies: monthlySource.companies as Company[],
+  history: monthlyHistorySource.periods as HistoryPeriod[],
+};

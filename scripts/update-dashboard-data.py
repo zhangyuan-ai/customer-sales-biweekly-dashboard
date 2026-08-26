@@ -2,6 +2,7 @@
 
 Usage:
   python scripts/update-dashboard-data.py PREVIOUS.xlsx CURRENT.xlsx
+  python scripts/update-dashboard-data.py --mode monthly PREVIOUS.xlsx CURRENT.xlsx
 
 The source workbooks stay local. Only aggregated dashboard JSON is written.
 """
@@ -11,6 +12,7 @@ from __future__ import annotations
 import json
 import re
 import sys
+from calendar import monthrange
 from collections import OrderedDict
 from datetime import datetime
 from pathlib import Path
@@ -20,8 +22,10 @@ from openpyxl import load_workbook
 
 REQUIRED_COLUMNS = ("客户公司", "客户名称", "含税金额", "参考毛利额")
 REPO_ROOT = Path(__file__).resolve().parents[1]
-DATA_PATH = REPO_ROOT / "app" / "dashboard-data.json"
-HISTORY_PATH = REPO_ROOT / "app" / "dashboard-history.json"
+WEEKLY_DATA_PATH = REPO_ROOT / "app" / "dashboard-data.json"
+WEEKLY_HISTORY_PATH = REPO_ROOT / "app" / "dashboard-history.json"
+MONTHLY_DATA_PATH = REPO_ROOT / "app" / "monthly-dashboard-data.json"
+MONTHLY_HISTORY_PATH = REPO_ROOT / "app" / "monthly-dashboard-history.json"
 
 
 def number(value: object) -> float:
@@ -32,17 +36,31 @@ def number(value: object) -> float:
     return float(str(value).replace(",", "").strip())
 
 
-def period_from_filename(path: Path) -> dict[str, str]:
+def period_from_filename(path: Path, mode: str) -> dict[str, object]:
     dates = re.findall(r"20\d{2}-\d{2}-\d{2}", path.stem)
     if len(dates) < 2:
         raise ValueError(f"文件名必须包含开始和结束日期：{path.name}")
     start, end = dates[0], dates[-1]
-    datetime.strptime(start, "%Y-%m-%d")
-    datetime.strptime(end, "%Y-%m-%d")
+    start_date = datetime.strptime(start, "%Y-%m-%d")
+    end_date = datetime.strptime(end, "%Y-%m-%d")
+    days_covered = (end_date - start_date).days + 1
+    days_in_month = monthrange(end_date.year, end_date.month)[1]
+    is_partial = mode == "monthly" and (
+        start_date.day != 1 or end_date.day != days_in_month
+    )
+    if mode == "monthly":
+        label = f"{end_date.year}年{end_date.month}月"
+        if is_partial:
+            label += f"（截至{end_date.day}日）"
+    else:
+        label = f"{start[5:]} ~ {end[5:]}"
     return {
         "start": start,
         "end": end,
-        "label": f"{start[5:]} ~ {end[5:]}",
+        "label": label,
+        "daysCovered": days_covered,
+        "daysInMonth": days_in_month,
+        "isPartial": is_partial,
     }
 
 
@@ -138,7 +156,7 @@ def build_companies(previous: OrderedDict[str, dict], current: OrderedDict[str, 
     return result
 
 
-def period_summary(period: dict[str, str], companies: OrderedDict[str, dict]) -> dict:
+def period_summary(period: dict[str, object], companies: OrderedDict[str, dict]) -> dict:
     sales = rounded(sum(item["sales"] for item in companies.values()))
     margin_amount = rounded(sum(item["marginAmount"] for item in companies.values()))
     return {
@@ -155,10 +173,10 @@ def period_summary(period: dict[str, str], companies: OrderedDict[str, dict]) ->
     }
 
 
-def load_history() -> list[dict]:
-    if not HISTORY_PATH.exists():
+def load_history(history_path: Path) -> list[dict]:
+    if not history_path.exists():
         return []
-    return json.loads(HISTORY_PATH.read_text(encoding="utf-8")).get("periods", [])
+    return json.loads(history_path.read_text(encoding="utf-8")).get("periods", [])
 
 
 def save_json(path: Path, payload: dict) -> None:
@@ -166,17 +184,27 @@ def save_json(path: Path, payload: dict) -> None:
 
 
 def main() -> None:
-    if len(sys.argv) != 3:
-        raise SystemExit("用法：python scripts/update-dashboard-data.py 上周报表.xlsx 本周报表.xlsx")
+    mode = "weekly"
+    args = sys.argv[1:]
+    if len(args) >= 2 and args[0] == "--mode":
+        mode = args[1]
+        args = args[2:]
+    if mode not in {"weekly", "monthly"} or len(args) != 2:
+        raise SystemExit(
+            "用法：python scripts/update-dashboard-data.py [--mode weekly|monthly] 上期报表.xlsx 本期报表.xlsx"
+        )
 
-    previous_path = Path(sys.argv[1]).resolve()
-    current_path = Path(sys.argv[2]).resolve()
+    data_path = MONTHLY_DATA_PATH if mode == "monthly" else WEEKLY_DATA_PATH
+    history_path = MONTHLY_HISTORY_PATH if mode == "monthly" else WEEKLY_HISTORY_PATH
+
+    previous_path = Path(args[0]).resolve()
+    current_path = Path(args[1]).resolve()
     for path in (previous_path, current_path):
         if not path.exists():
             raise FileNotFoundError(path)
 
-    previous_period = period_from_filename(previous_path)
-    current_period = period_from_filename(current_path)
+    previous_period = period_from_filename(previous_path, mode)
+    current_period = period_from_filename(current_path, mode)
     if previous_period["start"] >= current_period["start"]:
         raise ValueError("两份报表顺序不正确：请先传上期，再传本期")
 
@@ -185,21 +213,22 @@ def main() -> None:
     companies = build_companies(previous, current)
 
     dashboard_payload = {
+        "mode": mode,
         "generatedAt": datetime.now().astimezone().isoformat(timespec="seconds"),
         "previous": previous_period,
         "current": current_period,
         "companies": companies,
     }
-    save_json(DATA_PATH, dashboard_payload)
+    save_json(data_path, dashboard_payload)
 
     history_by_period = {
         f"{item['start']}|{item['end']}": item
-        for item in load_history()
+        for item in load_history(history_path)
     }
     for period, data in ((previous_period, previous), (current_period, current)):
         history_by_period[f"{period['start']}|{period['end']}"] = period_summary(period, data)
     history = sorted(history_by_period.values(), key=lambda item: item["start"])[-12:]
-    save_json(HISTORY_PATH, {"periods": history})
+    save_json(history_path, {"periods": history})
 
     current_summary = history_by_period[f"{current_period['start']}|{current_period['end']}"]
     print(

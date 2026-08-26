@@ -360,6 +360,10 @@ footer { padding: 4px 0 10px; color: #8d96a4; font-size: 11px; text-align: cente
 @keyframes title-gradient-flow { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
 .reference-theme .subtitle { color: rgba(255,255,255,.74); }
 .header-controls { display: grid; justify-items: end; gap: 12px; }
+.period-mode-switch { display: flex; gap: 5px; padding: 5px; border: 1px solid rgba(255,255,255,.14); border-radius: 999px; background: rgba(4,8,20,.34); backdrop-filter: blur(18px); }
+.period-mode-switch button { padding: 7px 18px; border: 0; border-radius: 999px; background: transparent; color: rgba(255,255,255,.52); font-size: 12px; font-weight: 700; cursor: pointer; transition: .18s ease; }
+.period-mode-switch button:hover { color: #fff; }
+.period-mode-switch button.active { background: linear-gradient(135deg, #2d6cff, #6f54ff); color: #fff; box-shadow: 0 6px 18px rgba(45,108,255,.28), inset 0 1px 0 rgba(255,255,255,.24); }
 .reference-theme .period-chip { border-color: rgba(255,255,255,.16); background: rgba(7,15,32,.32); color: rgba(255,255,255,.7); backdrop-filter: blur(18px) saturate(1.35); }
 .reference-theme .period-chip strong { color: #fff; }
 .background-switcher { display: flex; gap: 7px; padding: 5px; border: 1px solid rgba(255,255,255,.12); border-radius: 999px; background: rgba(4,8,20,.28); backdrop-filter: blur(18px); }
@@ -367,6 +371,13 @@ footer { padding: 4px 0 10px; color: #8d96a4; font-size: 11px; text-align: cente
 .background-switcher button:hover { color: #fff; }
 .background-switcher button.active { border-color: rgba(255,255,255,.28); background: rgba(255,255,255,.11); color: #fff; box-shadow: inset 0 1px 0 rgba(255,255,255,.18); }
 .background-switcher b { font-weight: 700; }
+.partial-month-banner { display: grid; grid-template-columns: auto minmax(140px,220px) minmax(260px,1fr); align-items: center; gap: 16px; margin: 0 0 14px; padding: 13px 16px; border: 1px solid rgba(255,193,84,.25); border-radius: 15px; background: linear-gradient(105deg, rgba(255,178,46,.13), rgba(20,31,61,.54)); color: rgba(255,255,255,.8); box-shadow: inset 0 1px 0 rgba(255,255,255,.08); backdrop-filter: blur(18px); }
+.partial-month-banner > div:first-child { display: flex; align-items: baseline; gap: 8px; white-space: nowrap; }
+.partial-month-banner span { color: #ffd58a; font-size: 10px; font-weight: 750; letter-spacing: .06em; }
+.partial-month-banner strong { color: #fff; font-size: 15px; }
+.partial-month-banner p { margin: 0; color: rgba(255,255,255,.66); font-size: 11px; line-height: 1.6; }
+.month-progress-track { height: 7px; overflow: hidden; border-radius: 999px; background: rgba(255,255,255,.1); }
+.month-progress-track i { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg,#ffba47,#ffe1a8); box-shadow: 0 0 16px rgba(255,186,71,.32); }
 .reference-theme .metric-card,
 .reference-theme .alert-card { border-color: rgba(255,255,255,.14); background: rgba(255,255,255,.055); box-shadow: var(--shadow); color: #fff; backdrop-filter: blur(18px) saturate(1.5); }
 .reference-theme .metric-card::after { background: radial-gradient(circle, rgba(77,159,255,.18), transparent 68%); }
@@ -383,11 +394,17 @@ footer { padding: 4px 0 10px; color: #8d96a4; font-size: 11px; text-align: cente
 
 @media (max-width: 860px) {
   .header-controls { width: 100%; justify-items: start; }
+  .partial-month-banner { grid-template-columns: auto 1fr; }
+  .partial-month-banner p { grid-column: 1 / -1; }
 }
 @media (max-width: 620px) {
+  .period-mode-switch { width: 100%; }
+  .period-mode-switch button { flex: 1; }
   .background-switcher { width: 100%; border-radius: 18px; }
   .background-switcher button { flex: 1; justify-content: center; padding-inline: 8px; }
   .background-switcher button span { display: none; }
+  .partial-month-banner { grid-template-columns: 1fr; }
+  .partial-month-banner p { grid-column: auto; }
 }
 @media (prefers-reduced-motion: reduce) {
   .video-background video { display: none; }
@@ -427,6 +444,7 @@ footer { padding: 4px 0 10px; color: #8d96a4; font-size: 11px; text-align: cente
 .reference-theme .history-heading p,
 .reference-theme .history-heading > span,
 .reference-theme .history-chart article > small { color: rgba(255,255,255,.5); }
+.reference-theme .history-chart article.partial-period { padding: 7px; border: 1px dashed rgba(255,193,84,.3); border-radius: 12px; background: rgba(255,178,46,.045); }
 .reference-theme .history-value span { color: #70e6ac; }
 .reference-theme .history-bar-track { background: linear-gradient(180deg, rgba(255,255,255,.025), rgba(65,130,255,.1)); }
 .reference-theme .chart-card { border-color: rgba(255,255,255,.1); background: rgba(255,255,255,.035); box-shadow: inset 0 1px 0 rgba(255,255,255,.06); }
