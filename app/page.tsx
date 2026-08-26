@@ -16,6 +16,7 @@ const customerCurrentMargin = (item: Customer) => item.w2Sales ? item.w2MarginAm
 const companyMarginDelta = (item: Company) => (currentMargin(item) - previousMargin(item)) * 100;
 const isNewCompany = (item: Company) => item.w1Sales <= 0 && item.w2Sales > 0;
 const isDroppedCompany = (item: Company) => item.w1Sales > 0 && item.w2Sales <= 0;
+const isComparableCompany = (item: Company) => item.w1Sales > 0 && item.w2Sales > 0;
 const previousCustomerCount = (item: Company) => item.customers.filter((customer) => customer.w1Sales > 0).length;
 const currentCustomerCount = (item: Company) => item.customers.filter((customer) => customer.w2Sales > 0).length;
 const status = (item: Company, currentScale = 1) => isNewCompany(item) ? "新增" : isDroppedCompany(item) ? "流失" : item.w2Sales * currentScale < item.w1Sales ? "销售下滑" : "增长";
@@ -60,7 +61,7 @@ function SalesChart({ companies, previousLabel, currentLabel }: { companies: Com
 }
 
 function MarginDeltaChart({ companies }: { companies: Company[] }) {
-  const comparableCompanies = companies.filter((item) => item.w1Sales > 0 && item.w2Sales > 0);
+  const comparableCompanies = companies.filter(isComparableCompany);
   const rows = [...comparableCompanies].sort((a, b) => Math.abs(companyMarginDelta(b)) - Math.abs(companyMarginDelta(a))).slice(0, 8);
   const max = Math.max(...rows.map((item) => Math.abs(companyMarginDelta(item))), 1);
   return <div className="delta-chart">
@@ -146,19 +147,23 @@ export default function Home() {
   ];
   const newCompanies = companies.filter(isNewCompany);
   const droppedCompanies = companies.filter(isDroppedCompany);
-  const salesDownCompanies = companies.filter((item) => item.w2Sales * currentScale < item.w1Sales);
-  const marginDownCompanies = companies.filter((item) => item.w1Sales > 0 && item.w2Sales > 0 && companyMarginDelta(item) < 0);
+  const comparableCompanies = companies.filter(isComparableCompany);
+  const salesDownCompanies = comparableCompanies.filter((item) => item.w2Sales * currentScale < item.w1Sales);
+  const marginDownCompanies = comparableCompanies.filter((item) => companyMarginDelta(item) < 0);
   const alerts = [
     { label: "新增公司", value: newCompanies.length, detail: summarizeCompanies(newCompanies), tone: "new", action: "new" as Filter },
     { label: "流失公司", value: droppedCompanies.length, detail: summarizeCompanies(droppedCompanies), tone: "drop", action: "dropped" as Filter },
     { label: isPartialMonth ? "预计销售下滑公司" : "销售额下滑公司", value: salesDownCompanies.length, detail: summarizeCompanies(salesDownCompanies), tone: "sales", action: "down" as Filter },
     { label: "毛利率下滑公司", value: marginDownCompanies.length, detail: summarizeCompanies(marginDownCompanies), tone: "margin", action: "marginDown" as Filter },
   ];
-  const growthCompanies = [...companies].filter((item) => item.w2Sales * currentScale > item.w1Sales).sort((a, b) => (b.w2Sales * currentScale - b.w1Sales) - (a.w2Sales * currentScale - a.w1Sales));
-  const declineCompanies = [...companies].filter((item) => item.w2Sales * currentScale < item.w1Sales).sort((a, b) => (a.w2Sales * currentScale - a.w1Sales) - (b.w2Sales * currentScale - b.w1Sales));
-  const marginGrowthCompanies = [...companies].sort((a, b) => (b.w2MarginAmount * currentScale - b.w1MarginAmount) - (a.w2MarginAmount * currentScale - a.w1MarginAmount));
-  const comparableCompanies = companies.filter((item) => item.w1Sales > 0 && item.w2Sales > 0);
-  const marginRiskCompanies = [...comparableCompanies].sort((a, b) => companyMarginDelta(a) - companyMarginDelta(b));
+  const growthCompanies = [...comparableCompanies].filter((item) => item.w2Sales * currentScale > item.w1Sales).sort((a, b) => (b.w2Sales * currentScale - b.w1Sales) - (a.w2Sales * currentScale - a.w1Sales));
+  const declineCompanies = [...comparableCompanies].filter((item) => item.w2Sales * currentScale < item.w1Sales).sort((a, b) => (a.w2Sales * currentScale - a.w1Sales) - (b.w2Sales * currentScale - b.w1Sales));
+  const marginGrowthCompanies = [...comparableCompanies]
+    .filter((item) => item.w2MarginAmount * currentScale > item.w1MarginAmount)
+    .sort((a, b) => (b.w2MarginAmount * currentScale - b.w1MarginAmount) - (a.w2MarginAmount * currentScale - a.w1MarginAmount));
+  const marginRiskCompanies = [...comparableCompanies]
+    .filter((item) => companyMarginDelta(item) < 0)
+    .sort((a, b) => companyMarginDelta(a) - companyMarginDelta(b));
   const topGrowth = growthCompanies[0];
   const topDecline = declineCompanies[0];
   const topMarginGrowth = marginGrowthCompanies[0];
@@ -179,8 +184,9 @@ export default function Home() {
     const match = companies.filter((item) => {
       const byQuery = item.company.toLowerCase().includes(query.trim().toLowerCase());
       const byFilter = filter === "all" || (filter === "new" && isNewCompany(item)) || (filter === "dropped" && isDroppedCompany(item))
-        || (filter === "negative" && currentMargin(item) < 0) || (filter === "down" && item.w2Sales * currentScale < item.w1Sales)
-        || (filter === "marginDown" && companyMarginDelta(item) < 0);
+        || (filter === "negative" && item.w2Sales > 0 && currentMargin(item) < 0)
+        || (filter === "down" && isComparableCompany(item) && item.w2Sales * currentScale < item.w1Sales)
+        || (filter === "marginDown" && isComparableCompany(item) && companyMarginDelta(item) < 0);
       return byQuery && byFilter;
     });
     return match.sort((a, b) => {
