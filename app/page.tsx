@@ -258,7 +258,7 @@ export default function Home() {
     </article>)}</section>
 
     <section className="content-section insight-section">
-      <SectionTitle note="根据两期销售与毛利数据自动生成">本期经营结论</SectionTitle>
+      <SectionTitle note="贡献榜仅比较两期均有销售的公司；新增与流失单独归类">本期经营结论</SectionTitle>
       <div className="insight-summary"><span>自动洞察</span><p>{insightNarrative}</p></div>
       <div className="insight-grid">{insightCards.map((item) => <article key={item.label}>
         <p>{item.label}</p><strong>{item.company}</strong><span className={item.tone}>{item.value}</span>
