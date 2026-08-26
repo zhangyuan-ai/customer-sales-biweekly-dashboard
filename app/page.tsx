@@ -73,7 +73,10 @@ function MarginDeltaChart({ companies }: { companies: Company[] }) {
 }
 
 function MarginRank({ high, companies }: { high: boolean; companies: Company[] }) {
-  const rows = [...companies].sort((a, b) => high ? currentMargin(b) - currentMargin(a) : currentMargin(a) - currentMargin(b)).slice(0, 10);
+  const rows = companies
+    .filter((item) => item.w2Sales > 0)
+    .sort((a, b) => high ? currentMargin(b) - currentMargin(a) : currentMargin(a) - currentMargin(b))
+    .slice(0, 10);
   const max = Math.max(...rows.map(currentMargin), 0.01);
   return <ol className="rank-list">
     {rows.map((item, index) => <li key={item.company}>
@@ -270,8 +273,8 @@ export default function Home() {
       <div className="chart-grid">
         <article className="chart-card chart-wide"><div className="chart-heading"><h3>销售额 TOP 8</h3><div className="legend"><span><i className="old" />{dashboard.previous.label}</span><span><i className="current" />{dashboard.current.label}</span></div></div><SalesChart companies={companies} previousLabel={dashboard.previous.label} currentLabel={dashboard.current.label} /></article>
         <article className="chart-card chart-wide"><div className="chart-heading"><h3>毛利率波动聚焦</h3><small>仅展示两{isMonthly ? "月" : "周"}均有数据 · 百分点</small></div><MarginDeltaChart companies={companies} /></article>
-        <article className="chart-card"><div className="chart-heading"><h3>{currentLabel}毛利率最低 Top 10</h3><small className="rank-red">低位</small></div><MarginRank high={false} companies={companies} /></article>
-        <article className="chart-card"><div className="chart-heading"><h3>{currentLabel}毛利率最高 Top 10</h3><small className="rank-green">高位</small></div><MarginRank high companies={companies} /></article>
+        <article className="chart-card"><div className="chart-heading"><h3>{currentLabel}毛利率最低 Top 10</h3><small className="rank-red">低位 · 仅含本期有销售</small></div><MarginRank high={false} companies={companies} /></article>
+        <article className="chart-card"><div className="chart-heading"><h3>{currentLabel}毛利率最高 Top 10</h3><small className="rank-green">高位 · 仅含本期有销售</small></div><MarginRank high companies={companies} /></article>
       </div>
     </section>
 

@@ -408,7 +408,9 @@ footer { padding: 4px 0 10px; color: #8d96a4; font-size: 11px; text-align: cente
 }
 @media (prefers-reduced-motion: reduce) {
   .video-background video { display: none; }
-  .reference-theme h1 { animation: none; background-position: 48% 50%; }
+  .reference-theme h1,
+  .reference-theme h2,
+  .reference-theme h3 { animation: none; background-position: 48% 50%; }
 }
 
 .reference-theme .alert-card { position: relative; min-height: 102px; border-left-width: 1px; overflow: hidden; }
@@ -429,7 +431,7 @@ footer { padding: 4px 0 10px; color: #8d96a4; font-size: 11px; text-align: cente
   backdrop-filter: blur(22px) saturate(1.4);
 }
 .reference-theme .section-title > span { background: linear-gradient(#24e1ff, #2b79ff); box-shadow: 0 0 18px rgba(35,202,255,.55); }
-.reference-theme .section-title h2 { color: #35d7f5; font-size: 18px; letter-spacing: -.01em; }
+.reference-theme .section-title h2 { font-size: 18px; letter-spacing: -.01em; }
 .reference-theme .section-title p { color: rgba(255,255,255,.53); }
 .reference-theme .insight-summary { border-color: rgba(74,166,255,.2); background: linear-gradient(135deg, rgba(29,119,255,.16), rgba(119,64,211,.12)); }
 .reference-theme .insight-summary > span { background: rgba(68,169,255,.16); color: #8edbff; }
@@ -438,7 +440,6 @@ footer { padding: 4px 0 10px; color: #8d96a4; font-size: 11px; text-align: cente
 .reference-theme .insight-grid p { color: rgba(255,255,255,.5); }
 .reference-theme .insight-grid strong { color: rgba(255,255,255,.88); }
 .reference-theme .history-card { border-color: rgba(255,255,255,.1); background: rgba(255,255,255,.035); box-shadow: inset 0 1px 0 rgba(255,255,255,.06); }
-.reference-theme .history-heading h3,
 .reference-theme .history-value strong,
 .reference-theme .history-chart article > b { color: rgba(255,255,255,.9); }
 .reference-theme .history-heading p,
@@ -448,7 +449,16 @@ footer { padding: 4px 0 10px; color: #8d96a4; font-size: 11px; text-align: cente
 .reference-theme .history-value span { color: #70e6ac; }
 .reference-theme .history-bar-track { background: linear-gradient(180deg, rgba(255,255,255,.025), rgba(65,130,255,.1)); }
 .reference-theme .chart-card { border-color: rgba(255,255,255,.1); background: rgba(255,255,255,.035); box-shadow: inset 0 1px 0 rgba(255,255,255,.06); }
-.reference-theme .chart-heading h3 { color: rgba(255,255,255,.9); }
+.reference-theme h2,
+.reference-theme h3 {
+  background: linear-gradient(90deg, #28d8ff 0%, #3986ff 21%, #a76cff 42%, #f7fbff 50%, #9a72ff 58%, #22d9ff 79%, #3986ff 100%);
+  background-size: 240% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 24px rgba(39,132,255,.14);
+  animation: title-gradient-flow 7s ease-in-out infinite;
+}
 .reference-theme .chart-heading small,
 .reference-theme .legend,
 .reference-theme .bar-label,
