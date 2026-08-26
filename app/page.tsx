@@ -1,20 +1,25 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { companies, dashboardPeriod, type Company } from "./data";
+import { companies, dashboardHistory, dashboardPeriod, generatedAt, type Company, type Customer } from "./data";
 
 type Filter = "all" | "new" | "dropped" | "negative" | "down" | "marginDown";
 type SortKey = "company" | "w1Sales" | "w2Sales" | "salesPct" | "w1Margin" | "w2Margin" | "marginDelta" | "custW2";
 
 const money = (value: number) => `¥${Math.round(value).toLocaleString("zh-CN")}`;
+const signedMoney = (value: number) => `${value > 0 ? "+" : value < 0 ? "−" : ""}${money(Math.abs(value))}`;
 const percent = (value: number) => `${(value * 100).toFixed(2)}%`;
 const signed = (value: number, digits = 1) => `${value > 0 ? "+" : ""}${value.toFixed(digits)}%`;
 const salesPct = (item: Company) => item.w1Sales ? (item.w2Sales - item.w1Sales) / item.w1Sales : Number.POSITIVE_INFINITY;
 const previousMargin = (item: Company) => item.w1Sales ? item.w1MarginAmount / item.w1Sales : 0;
 const currentMargin = (item: Company) => item.w2Sales ? item.w2MarginAmount / item.w2Sales : 0;
+const customerSalesPct = (item: Customer) => item.w1Sales ? (item.w2Sales - item.w1Sales) / item.w1Sales : Number.POSITIVE_INFINITY;
+const customerCurrentMargin = (item: Customer) => item.w2Sales ? item.w2MarginAmount / item.w2Sales : 0;
 const companyMarginDelta = (item: Company) => (currentMargin(item) - previousMargin(item)) * 100;
 const isNewCompany = (item: Company) => item.w1Sales <= 0 && item.w2Sales > 0;
 const isDroppedCompany = (item: Company) => item.w1Sales > 0 && item.w2Sales <= 0;
+const previousCustomerCount = (item: Company) => item.customers.filter((customer) => customer.w1Sales > 0).length;
+const currentCustomerCount = (item: Company) => item.customers.filter((customer) => customer.w2Sales > 0).length;
 const status = (item: Company) => isNewCompany(item) ? "新增" : isDroppedCompany(item) ? "流失" : item.w2Sales < item.w1Sales ? "销售下滑" : "增长";
 
 const totals = companies.reduce((sum, item) => ({
@@ -54,11 +59,36 @@ const alerts = [
   { label: "毛利率下滑公司", value: marginDownCompanies.length, detail: summarizeCompanies(marginDownCompanies), tone: "margin", action: "marginDown" as Filter },
 ];
 
-const backgrounds = [
+const salesDelta = totals.w2Sales - totals.w1Sales;
+const marginAmountDelta = totals.w2MarginAmount - totals.w1MarginAmount;
+const marginRateDelta = (currentMarginRate - previousMarginRate) * 100;
+const growthCompanies = [...companies].filter((item) => item.w2Sales > item.w1Sales).sort((a, b) => (b.w2Sales - b.w1Sales) - (a.w2Sales - a.w1Sales));
+const declineCompanies = [...companies].filter((item) => item.w2Sales < item.w1Sales).sort((a, b) => (a.w2Sales - a.w1Sales) - (b.w2Sales - b.w1Sales));
+const marginGrowthCompanies = [...companies].sort((a, b) => (b.w2MarginAmount - b.w1MarginAmount) - (a.w2MarginAmount - a.w1MarginAmount));
+const comparableCompanies = companies.filter((item) => item.w1Sales > 0 && item.w2Sales > 0);
+const marginRiskCompanies = [...comparableCompanies].sort((a, b) => companyMarginDelta(a) - companyMarginDelta(b));
+const topGrowth = growthCompanies[0];
+const topDecline = declineCompanies[0];
+const topMarginGrowth = marginGrowthCompanies[0];
+const topMarginRisk = marginRiskCompanies[0];
+
+const insightCards = [
+  topGrowth && { label: "销售增长贡献最大", company: topGrowth.company, value: signedMoney(topGrowth.w2Sales - topGrowth.w1Sales), tone: "up" },
+  topDecline && { label: "销售下滑影响最大", company: topDecline.company, value: signedMoney(topDecline.w2Sales - topDecline.w1Sales), tone: "down" },
+  topMarginGrowth && { label: "毛利额增长贡献最大", company: topMarginGrowth.company, value: signedMoney(topMarginGrowth.w2MarginAmount - topMarginGrowth.w1MarginAmount), tone: "up" },
+  topMarginRisk && { label: "毛利率降幅最大", company: topMarginRisk.company, value: signed(companyMarginDelta(topMarginRisk), 2), tone: "down" },
+].filter(Boolean) as { label: string; company: string; value: string; tone: "up" | "down" }[];
+
+const growthDrivers = growthCompanies.slice(0, 2).map((item) => item.company).join("、");
+const insightNarrative = `本周销售额较上期${salesDelta >= 0 ? "增长" : "下降"}${money(Math.abs(salesDelta))}，${growthDrivers ? `主要增长来自${growthDrivers}` : "暂无明显增长来源"}；参考毛利额${marginAmountDelta >= 0 ? "增长" : "下降"}${money(Math.abs(marginAmountDelta))}，综合毛利率${marginRateDelta >= 0 ? "提升" : "下降"}${Math.abs(marginRateDelta).toFixed(2)} 个百分点。`;
+const dataUpdatedLabel = generatedAt.replace("T", " ").slice(0, 16);
+
+const backgrounds: { label: string; src: string | null }[] = [
+  { label: "静态背景", src: null },
   { label: "背景 1", src: "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260629_030107_874273ea-684a-4e90-bb96-8fdfde48d53d.mp4" },
   { label: "背景 2", src: "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260629_032424_3c9c2a9d-807b-4482-80e6-dd6d9dfd4545.mp4" },
   { label: "背景 3", src: "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260627_094019_4214ea73-b963-46a4-8327-61489192de99.mp4" },
-] as const;
+];
 
 const filters: { key: Filter; label: string }[] = [
   { key: "all", label: "全部" }, { key: "new", label: "新增" }, { key: "dropped", label: "流失" },
@@ -108,6 +138,20 @@ function MarginRank({ high }: { high: boolean }) {
   </ol>;
 }
 
+function HistoryTrend() {
+  const maxSales = Math.max(...dashboardHistory.map((item) => item.sales), 1);
+  return <div className="history-card">
+    <div className="history-heading"><div><h3>销售与毛利历史趋势</h3><p>自动保留最近 12 期，当前已累计 {dashboardHistory.length} 期</p></div><span>销售额 / 毛利率</span></div>
+    <div className="history-chart" role="img" aria-label="最近各期销售额和毛利率趋势">
+      {dashboardHistory.map((item) => <article key={`${item.start}-${item.end}`}>
+        <div className="history-value"><strong>{money(item.sales)}</strong><span>{percent(item.marginRate)}</span></div>
+        <div className="history-bar-track"><i style={{ height: `${Math.max(8, item.sales / maxSales * 100)}%` }} /></div>
+        <b>{item.label}</b><small>{item.companyCount} 家公司 · {item.customerCount} 个客户</small>
+      </article>)}
+    </div>
+  </div>;
+}
+
 export default function Home() {
   const [background, setBackground] = useState(0);
   const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
@@ -115,6 +159,7 @@ export default function Home() {
   const [filter, setFilter] = useState<Filter>("all");
   const [sortKey, setSortKey] = useState<SortKey>("w2Sales");
   const [ascending, setAscending] = useState(false);
+  const activeBackground = backgrounds[background];
 
   const rows = useMemo(() => {
     const match = companies.filter((item) => {
@@ -127,10 +172,10 @@ export default function Home() {
     return match.sort((a, b) => {
       const av = sortKey === "salesPct" ? salesPct(a) : sortKey === "marginDelta" ? companyMarginDelta(a)
         : sortKey === "w1Margin" ? previousMargin(a) : sortKey === "w2Margin" ? currentMargin(a)
-          : sortKey === "custW2" ? a.w2Customers.length : a[sortKey];
+          : sortKey === "custW2" ? currentCustomerCount(a) : a[sortKey];
       const bv = sortKey === "salesPct" ? salesPct(b) : sortKey === "marginDelta" ? companyMarginDelta(b)
         : sortKey === "w1Margin" ? previousMargin(b) : sortKey === "w2Margin" ? currentMargin(b)
-          : sortKey === "custW2" ? b.w2Customers.length : b[sortKey];
+          : sortKey === "custW2" ? currentCustomerCount(b) : b[sortKey];
       const result = typeof av === "string" ? av.localeCompare(String(bv), "zh-CN") : Number(av) - Number(bv);
       return ascending ? result : -result;
     });
@@ -141,10 +186,9 @@ export default function Home() {
     else { setSortKey(key); setAscending(false); }
   };
 
-  const currentCustomers = selectedCompany?.w2Customers ?? [];
-  const previousCustomers = selectedCompany?.w1Customers ?? [];
-  const addedCustomers = currentCustomers.filter((name) => !previousCustomers.includes(name));
-  const inactiveCustomers = previousCustomers.filter((name) => !currentCustomers.includes(name));
+  const customerRows = selectedCompany?.customers ?? [];
+  const currentCustomers = customerRows.filter((item) => item.w2Sales > 0);
+  const previousCustomers = customerRows.filter((item) => item.w1Sales > 0);
 
   const headers: [SortKey, string][] = [
     ["company", "客户公司"], ["w1Sales", "上周销售额"], ["w2Sales", "本周销售额"], ["salesPct", "销售额环比"],
@@ -153,9 +197,9 @@ export default function Home() {
 
   return <main className="dashboard-shell reference-theme">
     <div className="video-background" aria-hidden="true">
-      <video key={background} autoPlay muted loop playsInline>
-        <source src={backgrounds[background].src} type="video/mp4" />
-      </video>
+      {activeBackground.src && <video key={background} autoPlay muted loop playsInline preload="none">
+        <source src={activeBackground.src} type="video/mp4" />
+      </video>}
       <span />
     </div>
     <div className="dashboard-wrap">
@@ -163,6 +207,7 @@ export default function Home() {
       <div><p className="eyebrow">西安望家欢农业科技有限公司</p><h1>客户公司销售 · 双周环比看板</h1><p className="subtitle">按「客户公司」维度汇总 · 销售额与毛利率环比 · 点击公司行查看下属客户名单</p></div>
       <div className="header-controls">
         <div className="period-chip"><span>对比周期</span><strong>{dashboardPeriod.previous}</strong><i>→</i><strong>{dashboardPeriod.current}</strong></div>
+        <div className="data-updated"><span>数据更新</span><strong>{dataUpdatedLabel}</strong></div>
         <div className="background-switcher" aria-label="切换动态背景">
           {backgrounds.map((item, index) => <button type="button" key={item.label} className={background === index ? "active" : ""} onClick={() => setBackground(index)} aria-label={`切换至${item.label}`}><b>{item.label}</b></button>)}
         </div>
@@ -173,9 +218,22 @@ export default function Home() {
       <div className={`metric-icon icon-${index + 1}`} aria-hidden="true">{metric.glyph}</div><p>{metric.label}</p><strong>{metric.value}</strong><span className={metric.tone}>{metric.change}</span>
     </article>)}</section>
 
+    <section className="content-section insight-section">
+      <SectionTitle note="根据两期销售与毛利数据自动生成">本期经营结论</SectionTitle>
+      <div className="insight-summary"><span>自动洞察</span><p>{insightNarrative}</p></div>
+      <div className="insight-grid">{insightCards.map((item) => <article key={item.label}>
+        <p>{item.label}</p><strong>{item.company}</strong><span className={item.tone}>{item.value}</span>
+      </article>)}</div>
+    </section>
+
     <section className="alert-grid" aria-label="经营提醒">{alerts.map((alert) => <button type="button" className={`alert-card alert-${alert.tone}`} key={alert.label} onClick={() => setFilter(alert.action)}>
       <p>{alert.label}</p><strong>{alert.value}</strong><span>{alert.detail}</span>
     </button>)}</section>
+
+    <section className="content-section">
+      <SectionTitle note="每次导入新周报后自动追加，最多显示最近 12 期">历史经营趋势</SectionTitle>
+      <HistoryTrend />
+    </section>
 
     <section className="content-section">
       <SectionTitle note="销售规模、毛利率波动与高低位公司一屏对比">公司销售与毛利率可视化</SectionTitle>
@@ -199,7 +257,7 @@ export default function Home() {
           <td title={item.company}>{item.company}</td><td>{money(item.w1Sales)}</td><td><strong>{money(item.w2Sales)}</strong></td>
           <td className={change > 0 ? "up" : change < 0 ? "down" : "flat"}>{Number.isFinite(change) ? signed(change * 100) : "—"}</td>
           <td>{percent(previousMargin(item))}</td><td>{percent(currentMargin(item))}</td><td className={companyMarginDelta(item) > 0 ? "up" : companyMarginDelta(item) < 0 ? "down" : "flat"}>{isNewCompany(item) ? "—" : signed(companyMarginDelta(item), 2)}</td>
-          <td>{item.w1Customers.length === item.w2Customers.length ? item.w2Customers.length : `${item.w1Customers.length}→${item.w2Customers.length}`}</td><td><span className={`status-tag status-${itemStatus}`}>{itemStatus}</span></td>
+          <td>{previousCustomerCount(item) === currentCustomerCount(item) ? currentCustomerCount(item) : `${previousCustomerCount(item)}→${currentCustomerCount(item)}`}</td><td><span className={`status-tag status-${itemStatus}`}>{itemStatus}</span></td>
         </tr>; })}</tbody>
       </table></div>
       {!rows.length && <div className="empty-state">没有符合当前条件的客户公司</div>}
@@ -219,11 +277,22 @@ export default function Home() {
           <div><span>毛利率环比</span><strong className={companyMarginDelta(selectedCompany) >= 0 ? "up" : "down"}>{isNewCompany(selectedCompany) ? "—" : signed(companyMarginDelta(selectedCompany), 2)}</strong></div>
         </div>
         <div className="customer-summary"><span>本周下属客户</span><strong>{currentCustomers.length} 家</strong><small>{previousCustomers.length === currentCustomers.length ? "客户数量保持稳定" : `上周 ${previousCustomers.length} 家 → 本周 ${currentCustomers.length} 家`}</small></div>
-        <section className="customer-list-section" aria-label="下属客户名称">
-          <div className="customer-list-heading"><div><span>本周客户名称</span><small>来源于客户销售报表</small></div><b>{currentCustomers.length}</b></div>
-          {currentCustomers.length ? <ul>{currentCustomers.map((name, index) => <li key={name}><i>{String(index + 1).padStart(2, "0")}</i><span>{name}</span>{addedCustomers.includes(name) && <em>新增</em>}</li>)}</ul>
-            : <p className="customer-list-empty">本周没有客户销售记录</p>}
-          {inactiveCustomers.length > 0 && <div className="inactive-customers"><strong>本周未出现</strong>{inactiveCustomers.map((name) => <span key={name}>{name}</span>)}</div>}
+        <section className="customer-list-section" aria-label="下属客户经营明细">
+          <div className="customer-list-heading"><div><span>客户经营明细</span><small>销售额、环比、毛利率与毛利额</small></div><b>{currentCustomers.length}</b></div>
+          {customerRows.length ? <ul className="customer-detail-list">{customerRows.map((customer, index) => {
+            const change = customerSalesPct(customer);
+            const isAdded = customer.w1Sales <= 0 && customer.w2Sales > 0;
+            const isInactive = customer.w1Sales > 0 && customer.w2Sales <= 0;
+            return <li key={customer.name} className={isInactive ? "inactive" : ""}>
+              <div className="customer-record-heading"><i>{String(index + 1).padStart(2, "0")}</i><span>{customer.name}</span>{isAdded && <em className="added">新增</em>}{isInactive && <em className="inactive-tag">本周未出现</em>}</div>
+              <div className="customer-record-metrics">
+                <div><span>本周销售</span><strong>{money(customer.w2Sales)}</strong></div>
+                <div><span>销售环比</span><strong className={change >= 0 ? "up" : "down"}>{isAdded ? "新增" : isInactive ? "流失" : signed(change * 100)}</strong></div>
+                <div><span>本周毛利率</span><strong>{isInactive ? "—" : percent(customerCurrentMargin(customer))}</strong></div>
+                <div><span>本周毛利额</span><strong>{money(customer.w2MarginAmount)}</strong></div>
+              </div>
+            </li>;
+          })}</ul> : <p className="customer-list-empty">没有客户销售记录</p>}
         </section>
       </aside>
     </div>}

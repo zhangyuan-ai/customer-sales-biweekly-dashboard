@@ -1,0 +1,24 @@
+{
+  "periods": [
+    {
+      "start": "2026-08-07",
+      "end": "2026-08-13",
+      "label": "08-07 ~ 08-13",
+      "sales": 1480412.47,
+      "marginAmount": 198461.07,
+      "marginRate": 0.134058,
+      "companyCount": 28,
+      "customerCount": 50
+    },
+    {
+      "start": "2026-08-14",
+      "end": "2026-08-20",
+      "label": "08-14 ~ 08-20",
+      "sales": 1659244.38,
+      "marginAmount": 221339.3,
+      "marginRate": 0.133398,
+      "companyCount": 30,
+      "customerCount": 51
+    }
+  ]
+}
