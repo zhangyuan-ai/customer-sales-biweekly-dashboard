@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { companies, dashboardHistory, dashboardPeriod, generatedAt, type Company, type Customer } from "./data";
 
 type Filter = "all" | "new" | "dropped" | "negative" | "down" | "marginDown";
-type SortKey = "company" | "w1Sales" | "w2Sales" | "salesPct" | "w1Margin" | "w2Margin" | "marginDelta" | "custW2";
+type SortKey = "company" | "w1Sales" | "w2Sales" | "salesDelta" | "w1Margin" | "w2Margin" | "marginDelta" | "custW2";
 
 const money = (value: number) => `¥${Math.round(value).toLocaleString("zh-CN")}`;
 const signedMoney = (value: number) => `${value > 0 ? "+" : value < 0 ? "−" : ""}${money(Math.abs(value))}`;
@@ -115,7 +115,7 @@ function SalesChart() {
 }
 
 function MarginDeltaChart() {
-  const rows = [...companies].sort((a, b) => Math.abs(companyMarginDelta(b)) - Math.abs(companyMarginDelta(a))).slice(0, 8);
+  const rows = [...comparableCompanies].sort((a, b) => Math.abs(companyMarginDelta(b)) - Math.abs(companyMarginDelta(a))).slice(0, 8);
   const max = Math.max(...rows.map((item) => Math.abs(companyMarginDelta(item))), 1);
   return <div className="delta-chart">
     {rows.map((item) => { const delta = companyMarginDelta(item); return <div className="delta-row" key={item.company}>
@@ -170,10 +170,10 @@ export default function Home() {
       return byQuery && byFilter;
     });
     return match.sort((a, b) => {
-      const av = sortKey === "salesPct" ? salesPct(a) : sortKey === "marginDelta" ? companyMarginDelta(a)
+      const av = sortKey === "salesDelta" ? a.w2Sales - a.w1Sales : sortKey === "marginDelta" ? companyMarginDelta(a)
         : sortKey === "w1Margin" ? previousMargin(a) : sortKey === "w2Margin" ? currentMargin(a)
           : sortKey === "custW2" ? currentCustomerCount(a) : a[sortKey];
-      const bv = sortKey === "salesPct" ? salesPct(b) : sortKey === "marginDelta" ? companyMarginDelta(b)
+      const bv = sortKey === "salesDelta" ? b.w2Sales - b.w1Sales : sortKey === "marginDelta" ? companyMarginDelta(b)
         : sortKey === "w1Margin" ? previousMargin(b) : sortKey === "w2Margin" ? currentMargin(b)
           : sortKey === "custW2" ? currentCustomerCount(b) : b[sortKey];
       const result = typeof av === "string" ? av.localeCompare(String(bv), "zh-CN") : Number(av) - Number(bv);
@@ -191,7 +191,7 @@ export default function Home() {
   const previousCustomers = customerRows.filter((item) => item.w1Sales > 0);
 
   const headers: [SortKey, string][] = [
-    ["company", "客户公司"], ["w1Sales", "上周销售额"], ["w2Sales", "本周销售额"], ["salesPct", "销售额环比"],
+    ["company", "客户公司"], ["w1Sales", "上周销售额"], ["w2Sales", "本周销售额"], ["salesDelta", "销售额环比金额"],
     ["w1Margin", "上周毛利率"], ["w2Margin", "本周毛利率"], ["marginDelta", "毛利率环比(%)"], ["custW2", "下属客户"],
   ];
 
@@ -239,7 +239,7 @@ export default function Home() {
       <SectionTitle note="销售规模、毛利率波动与高低位公司一屏对比">公司销售与毛利率可视化</SectionTitle>
       <div className="chart-grid">
         <article className="chart-card chart-wide"><div className="chart-heading"><h3>销售额 TOP 8</h3><div className="legend"><span><i className="old" />上周</span><span><i className="current" />本周</span></div></div><SalesChart /></article>
-        <article className="chart-card chart-wide"><div className="chart-heading"><h3>毛利率波动聚焦</h3><small>百分点</small></div><MarginDeltaChart /></article>
+        <article className="chart-card chart-wide"><div className="chart-heading"><h3>毛利率波动聚焦</h3><small>仅展示两周均有数据 · 百分点</small></div><MarginDeltaChart /></article>
         <article className="chart-card"><div className="chart-heading"><h3>本周毛利率最低 Top 10</h3><small className="rank-red">低位</small></div><MarginRank high={false} /></article>
         <article className="chart-card"><div className="chart-heading"><h3>本周毛利率最高 Top 10</h3><small className="rank-green">高位</small></div><MarginRank high /></article>
       </div>
@@ -253,9 +253,9 @@ export default function Home() {
         <span className="row-count">共 {rows.length} 家公司</span>
       </div>
       <div className="table-scroll"><table><thead><tr>{headers.map(([key, label]) => <th key={key}><button type="button" onClick={() => sortBy(key)}>{label}<span>{sortKey === key ? ascending ? "↑" : "↓" : "↕"}</span></button></th>)}<th>状态</th></tr></thead>
-        <tbody>{rows.map((item) => { const change = salesPct(item); const itemStatus = status(item); return <tr className="clickable-row" key={item.company} tabIndex={0} aria-label={`查看${item.company}详情`} onClick={() => setSelectedCompany(item)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); setSelectedCompany(item); } }}>
+        <tbody>{rows.map((item) => { const change = item.w2Sales - item.w1Sales; const itemStatus = status(item); return <tr className="clickable-row" key={item.company} tabIndex={0} aria-label={`查看${item.company}详情`} onClick={() => setSelectedCompany(item)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); setSelectedCompany(item); } }}>
           <td title={item.company}>{item.company}</td><td>{money(item.w1Sales)}</td><td><strong>{money(item.w2Sales)}</strong></td>
-          <td className={change > 0 ? "up" : change < 0 ? "down" : "flat"}>{Number.isFinite(change) ? signed(change * 100) : "—"}</td>
+          <td className={change > 0 ? "up" : change < 0 ? "down" : "flat"}>{signedMoney(change)}</td>
           <td>{percent(previousMargin(item))}</td><td>{percent(currentMargin(item))}</td><td className={companyMarginDelta(item) > 0 ? "up" : companyMarginDelta(item) < 0 ? "down" : "flat"}>{isNewCompany(item) ? "—" : signed(companyMarginDelta(item), 2)}</td>
           <td>{previousCustomerCount(item) === currentCustomerCount(item) ? currentCustomerCount(item) : `${previousCustomerCount(item)}→${currentCustomerCount(item)}`}</td><td><span className={`status-tag status-${itemStatus}`}>{itemStatus}</span></td>
         </tr>; })}</tbody>
