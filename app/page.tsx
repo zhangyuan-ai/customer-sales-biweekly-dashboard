@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { monthlyDashboard, weeklyDashboard, type Company, type Customer, type HistoryPeriod } from "./data";
 
-type Filter = "all" | "new" | "dropped" | "negative" | "down" | "marginDown";
+type Filter = "all" | "new" | "dropped" | "negative" | "down" | "marginDown" | "quality";
 type SortKey = "company" | "w1Sales" | "w2Sales" | "salesDelta" | "w1Margin" | "w2Margin" | "marginDelta" | "custW2";
 
 const money = (value: number) => `¥${Math.round(value).toLocaleString("zh-CN")}`;
@@ -17,6 +17,7 @@ const companyMarginDelta = (item: Company) => (currentMargin(item) - previousMar
 const isNewCompany = (item: Company) => item.w1Sales <= 0 && item.w2Sales > 0;
 const isDroppedCompany = (item: Company) => item.w1Sales > 0 && item.w2Sales <= 0;
 const isComparableCompany = (item: Company) => item.w1Sales > 0 && item.w2Sales > 0;
+const hasZeroMarginWithSales = (item: Pick<Company, "w2Sales" | "w2MarginAmount">) => item.w2Sales > 0 && Math.abs(item.w2MarginAmount) < 0.005;
 const previousCustomerCount = (item: Company) => item.customers.filter((customer) => customer.w1Sales > 0).length;
 const currentCustomerCount = (item: Company) => item.customers.filter((customer) => customer.w2Sales > 0).length;
 const status = (item: Company, currentScale = 1) => isNewCompany(item) ? "新增" : isDroppedCompany(item) ? "流失" : item.w2Sales * currentScale < item.w1Sales ? "销售下滑" : "增长";
@@ -39,6 +40,7 @@ const backgrounds: { label: string; src: string | null }[] = [
 const filters: { key: Filter; label: string }[] = [
   { key: "all", label: "全部" }, { key: "new", label: "新增" }, { key: "dropped", label: "流失" },
   { key: "negative", label: "负毛利" }, { key: "down", label: "销售下滑" }, { key: "marginDown", label: "毛利下滑" },
+  { key: "quality", label: "待核查" },
 ];
 
 function SectionTitle({ children, note }: { children: React.ReactNode; note?: string }) {
@@ -169,11 +171,11 @@ export default function Home() {
   const topMarginGrowth = marginGrowthCompanies[0];
   const topMarginRisk = marginRiskCompanies[0];
   const insightCards = [
-    topGrowth && { label: isPartialMonth ? "预计销售增长贡献最大" : "销售增长贡献最大", company: topGrowth.company, value: signedMoney(topGrowth.w2Sales * currentScale - topGrowth.w1Sales), tone: "up" },
-    topDecline && { label: isPartialMonth ? "预计销售下滑影响最大" : "销售下滑影响最大", company: topDecline.company, value: signedMoney(topDecline.w2Sales * currentScale - topDecline.w1Sales), tone: "down" },
-    topMarginGrowth && { label: isPartialMonth ? "预计毛利额增长贡献最大" : "毛利额增长贡献最大", company: topMarginGrowth.company, value: signedMoney(topMarginGrowth.w2MarginAmount * currentScale - topMarginGrowth.w1MarginAmount), tone: "up" },
-    topMarginRisk && { label: "毛利率降幅最大", company: topMarginRisk.company, value: signed(companyMarginDelta(topMarginRisk), 2), tone: "down" },
-  ].filter(Boolean) as { label: string; company: string; value: string; tone: "up" | "down" }[];
+    topGrowth && { label: isPartialMonth ? "预计销售增长贡献最大" : "销售增长贡献最大", company: topGrowth.company, value: signedMoney(topGrowth.w2Sales * currentScale - topGrowth.w1Sales), tone: "up", companyData: topGrowth },
+    topDecline && { label: isPartialMonth ? "预计销售下滑影响最大" : "销售下滑影响最大", company: topDecline.company, value: signedMoney(topDecline.w2Sales * currentScale - topDecline.w1Sales), tone: "down", companyData: topDecline },
+    topMarginGrowth && { label: isPartialMonth ? "预计毛利额增长贡献最大" : "毛利额增长贡献最大", company: topMarginGrowth.company, value: signedMoney(topMarginGrowth.w2MarginAmount * currentScale - topMarginGrowth.w1MarginAmount), tone: "up", companyData: topMarginGrowth },
+    topMarginRisk && { label: "毛利率降幅最大", company: topMarginRisk.company, value: signed(companyMarginDelta(topMarginRisk), 2), tone: "down", companyData: topMarginRisk },
+  ].filter(Boolean) as { label: string; company: string; value: string; tone: "up" | "down"; companyData: Company }[];
   const growthDrivers = growthCompanies.slice(0, 2).map((item) => item.company).join("、");
   const insightNarrative = isPartialMonth
     ? `本月已统计 ${currentDays}/${currentMonthDays} 天，累计销售额 ${money(totals.w2Sales)}；日均销售节奏较上月${salesPaceDelta >= 0 ? "提升" : "下降"}${Math.abs(salesPaceDelta * 100).toFixed(1)}%，按当前节奏预计月底销售额 ${money(projectedSales)}。预计参考毛利额 ${money(projectedMargin)}，当前综合毛利率较上月${marginRateDelta >= 0 ? "提升" : "下降"}${Math.abs(marginRateDelta).toFixed(2)} 个百分点。`
@@ -186,7 +188,8 @@ export default function Home() {
       const byFilter = filter === "all" || (filter === "new" && isNewCompany(item)) || (filter === "dropped" && isDroppedCompany(item))
         || (filter === "negative" && item.w2Sales > 0 && currentMargin(item) < 0)
         || (filter === "down" && isComparableCompany(item) && item.w2Sales * currentScale < item.w1Sales)
-        || (filter === "marginDown" && isComparableCompany(item) && companyMarginDelta(item) < 0);
+        || (filter === "marginDown" && isComparableCompany(item) && companyMarginDelta(item) < 0)
+        || (filter === "quality" && hasZeroMarginWithSales(item));
       return byQuery && byFilter;
     });
     return match.sort((a, b) => {
@@ -258,11 +261,11 @@ export default function Home() {
     </article>)}</section>
 
     <section className="content-section insight-section">
-      <SectionTitle note="贡献榜仅比较两期均有销售的公司；新增与流失单独归类">本期经营结论</SectionTitle>
+      <SectionTitle note="贡献榜仅比较两期均有销售的公司；点击卡片查看公司明细">本期经营结论</SectionTitle>
       <div className="insight-summary"><span>自动洞察</span><p>{insightNarrative}</p></div>
-      <div className="insight-grid">{insightCards.map((item) => <article key={item.label}>
-        <p>{item.label}</p><strong>{item.company}</strong><span className={item.tone}>{item.value}</span>
-      </article>)}</div>
+      <div className="insight-grid">{insightCards.map((item) => <button type="button" key={item.label} onClick={() => setSelectedCompany(item.companyData)} aria-label={`查看${item.company}经营明细`}>
+        <p>{item.label}</p><strong>{item.company}</strong><span className={item.tone}>{item.value}</span><i aria-hidden="true">↗</i>
+      </button>)}</div>
     </section>
 
     <section className="alert-grid" aria-label="经营提醒">{alerts.map((alert) => <button type="button" className={`alert-card alert-${alert.tone}`} key={alert.label} onClick={() => setFilter(alert.action)}>
@@ -296,7 +299,7 @@ export default function Home() {
           <td title={item.company}>{item.company}</td><td>{money(item.w1Sales)}</td><td><strong>{money(item.w2Sales)}</strong></td>
           <td className={change > 0 ? "up" : change < 0 ? "down" : "flat"}>{signedMoney(change)}</td>
           <td>{percent(previousMargin(item))}</td><td>{percent(currentMargin(item))}</td><td className={companyMarginDelta(item) > 0 ? "up" : companyMarginDelta(item) < 0 ? "down" : "flat"}>{isNewCompany(item) ? "—" : signed(companyMarginDelta(item), 2)}</td>
-          <td>{previousCustomerCount(item) === currentCustomerCount(item) ? currentCustomerCount(item) : `${previousCustomerCount(item)}→${currentCustomerCount(item)}`}</td><td><span className={`status-tag status-${itemStatus}`}>{itemStatus}</span></td>
+          <td>{previousCustomerCount(item) === currentCustomerCount(item) ? currentCustomerCount(item) : `${previousCustomerCount(item)}→${currentCustomerCount(item)}`}</td><td><div className="status-stack"><span className={`status-tag status-${itemStatus}`}>{itemStatus}</span>{hasZeroMarginWithSales(item) && <span className="quality-tag">待核查</span>}</div></td>
         </tr>; })}</tbody>
       </table></div>
       {!rows.length && <div className="empty-state">没有符合当前条件的客户公司</div>}
@@ -308,7 +311,7 @@ export default function Home() {
           <div><p>COMPANY DEEP DIVE</p><h2 id="company-detail-title">{selectedCompany.company}</h2></div>
           <button type="button" onClick={() => setSelectedCompany(null)} aria-label="关闭公司详情">×</button>
         </div>
-        <span className={`drawer-status status-tag status-${status(selectedCompany, currentScale)}`}>{status(selectedCompany, currentScale)}</span>
+        <div className="drawer-status-group"><span className={`drawer-status status-tag status-${status(selectedCompany, currentScale)}`}>{status(selectedCompany, currentScale)}</span>{hasZeroMarginWithSales(selectedCompany) && <span className="quality-tag">销售有数据 · 毛利额为 0 · 待核查</span>}</div>
         <div className="drawer-metrics">
           <div><span>{isPartialMonth ? "本月累计销售额" : `${currentLabel}销售额`}</span><strong>{money(selectedCompany.w2Sales)}</strong></div>
           <div><span>{isPartialMonth ? "预计月底变化" : "销售额环比"}</span><strong className={selectedCompany.w2Sales * currentScale >= selectedCompany.w1Sales ? "up" : "down"}>{selectedCompany.w1Sales ? signed((selectedCompany.w2Sales * currentScale / selectedCompany.w1Sales - 1) * 100) : "新增"}</strong></div>
@@ -321,8 +324,9 @@ export default function Home() {
           {customerRows.length ? <ul className="customer-detail-list">{customerRows.map((customer, index) => {
             const isAdded = customer.w1Sales <= 0 && customer.w2Sales > 0;
             const isInactive = customer.w1Sales > 0 && customer.w2Sales <= 0;
+            const needsReview = hasZeroMarginWithSales(customer);
             return <li key={customer.name} className={isInactive ? "inactive" : ""}>
-              <div className="customer-record-heading"><i>{String(index + 1).padStart(2, "0")}</i><span>{customer.name}</span>{isAdded && <em className="added">新增</em>}{isInactive && <em className="inactive-tag">{currentLabel}未出现</em>}</div>
+              <div className="customer-record-heading"><i>{String(index + 1).padStart(2, "0")}</i><span>{customer.name}</span><div className="customer-record-tags">{isAdded && <em className="added">新增</em>}{isInactive && <em className="inactive-tag">{currentLabel}未出现</em>}{needsReview && <em className="quality-tag">待核查</em>}</div></div>
               <div className="customer-record-metrics">
                 <div><span>{isPartialMonth ? "本月累计销售" : `${currentLabel}销售`}</span><strong>{money(customer.w2Sales)}</strong></div>
                 <div><span>{isPartialMonth ? "预计月底变化" : "销售环比"}</span><strong className={customer.w2Sales * currentScale >= customer.w1Sales ? "up" : "down"}>{isAdded ? "新增" : isInactive ? "流失" : customer.w1Sales ? signed((customer.w2Sales * currentScale / customer.w1Sales - 1) * 100) : "—"}</strong></div>
