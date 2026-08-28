@@ -14,11 +14,27 @@
       "start": "2026-08-14",
       "end": "2026-08-20",
       "label": "08-14 ~ 08-20",
-      "sales": 1659244.38,
-      "marginAmount": 221339.3,
-      "marginRate": 0.133398,
+      "daysCovered": 7,
+      "daysInMonth": 31,
+      "isPartial": false,
+      "sales": 1662338.84,
+      "marginAmount": 220388.29,
+      "marginRate": 0.132577,
+      "companyCount": 29,
+      "customerCount": 50
+    },
+    {
+      "start": "2026-08-21",
+      "end": "2026-08-27",
+      "label": "08-21 ~ 08-27",
+      "daysCovered": 7,
+      "daysInMonth": 31,
+      "isPartial": false,
+      "sales": 1680070.2,
+      "marginAmount": 227185.43,
+      "marginRate": 0.135224,
       "companyCount": 30,
-      "customerCount": 51
+      "customerCount": 52
     }
   ]
 }
