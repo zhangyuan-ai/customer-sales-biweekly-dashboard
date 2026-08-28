@@ -236,7 +236,7 @@ export default function Home() {
     </div>
     <div className="dashboard-wrap">
     <header className="dashboard-header">
-      <div><p className="eyebrow">西安望家欢农业科技有限公司</p><h1>客户公司销售 · 周/月环比看板</h1><p className="subtitle">按「客户公司」维度汇总 · 销售额与毛利率环比 · 点击公司行查看下属客户名单</p></div>
+      <div><p className="eyebrow">西安望家欢农业科技有限公司</p><h1>客户销售与毛利经营看板</h1><p className="subtitle">按「客户公司」维度汇总 · 销售额与毛利率环比 · 点击公司行查看下属客户名单</p></div>
       <div className="header-controls">
         <div className="period-mode-switch" aria-label="切换周环比或月环比">
           <button type="button" className={mode === "weekly" ? "active" : ""} onClick={() => switchMode("weekly")}>周环比</button>
