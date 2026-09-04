@@ -1,15 +1,7 @@
 {
   "mode": "weekly",
-  "generatedAt": "2026-08-28T15:11:55+08:00",
+  "generatedAt": "2026-09-04T19:02:45+08:00",
   "previous": {
-    "start": "2026-08-14",
-    "end": "2026-08-20",
-    "label": "08-14 ~ 08-20",
-    "daysCovered": 7,
-    "daysInMonth": 31,
-    "isPartial": false
-  },
-  "current": {
     "start": "2026-08-21",
     "end": "2026-08-27",
     "label": "08-21 ~ 08-27",
@@ -17,638 +9,954 @@
     "daysInMonth": 31,
     "isPartial": false
   },
+  "current": {
+    "start": "2026-08-28",
+    "end": "2026-09-03",
+    "label": "08-28 ~ 09-03",
+    "daysCovered": 7,
+    "daysInMonth": 30,
+    "isPartial": false
+  },
   "companies": [
     {
       "company": "华润西京医院",
-      "w1Sales": 439699.36,
-      "w2Sales": 477980.91,
-      "w1MarginAmount": 25014.97,
-      "w2MarginAmount": 31908.01,
+      "w1Sales": 479344.72,
+      "w2Sales": 569186.54,
+      "w1MarginAmount": 27448.38,
+      "w2MarginAmount": 45972.33,
       "customers": [
         {
           "name": "华润万家生活超市有限公司（西京医院锦苑一层）",
-          "w1Sales": 247373.67,
-          "w2Sales": 259099.18,
-          "w1MarginAmount": 15206.4,
-          "w2MarginAmount": 21435.99
+          "w1Sales": 261264.93,
+          "w2Sales": 281447.68,
+          "w1MarginAmount": 16355.81,
+          "w2MarginAmount": 28413.86
         },
         {
           "name": "华润万家生活超市有限公司（西京医院锦苑二层））",
-          "w1Sales": 80859.18,
-          "w2Sales": 93942.56,
-          "w1MarginAmount": 5452.06,
-          "w2MarginAmount": 4960.34
+          "w1Sales": 93544.72,
+          "w2Sales": 108653.99,
+          "w1MarginAmount": 5777.84,
+          "w2MarginAmount": 7887.77
         },
         {
           "name": "华润万家生活超市有限公司（西京医院空勤餐厅）",
-          "w1Sales": 66187.15,
-          "w2Sales": 72467.82,
-          "w1MarginAmount": 2017.47,
-          "w2MarginAmount": 2031.19
+          "w1Sales": 72397.1,
+          "w2Sales": 106152.2,
+          "w1MarginAmount": 1981.72,
+          "w2MarginAmount": 3071.45
         },
         {
           "name": "华润万家生活超市有限公司（西京医院安居餐厅）",
-          "w1Sales": 24734.58,
-          "w2Sales": 28748.04,
-          "w1MarginAmount": 1473.57,
-          "w2MarginAmount": 2390.01
+          "w1Sales": 28526.77,
+          "w2Sales": 32429.24,
+          "w1MarginAmount": 2282.96,
+          "w2MarginAmount": 3772.65
         },
         {
           "name": "华润万家生活超市有限公司（西京医院锦苑三层））",
-          "w1Sales": 13903.73,
-          "w2Sales": 15480.56,
-          "w1MarginAmount": 635.01,
-          "w2MarginAmount": 844.08
-        },
-        {
-          "name": "华润万家生活超市有限公司（西京医院卫队餐厅）",
-          "w1Sales": 5472.32,
-          "w2Sales": 7405.53,
-          "w1MarginAmount": 250.14,
-          "w2MarginAmount": 252.95
+          "w1Sales": 15287.39,
+          "w2Sales": 18803.47,
+          "w1MarginAmount": 840.45,
+          "w2MarginAmount": 1344.18
         },
         {
           "name": "华润万家生活超市有限公司（西京医院幼儿园）",
-          "w1Sales": 1168.73,
-          "w2Sales": 837.22,
-          "w1MarginAmount": -19.68,
-          "w2MarginAmount": -6.55
-        }
-      ]
-    },
-    {
-      "company": "西北妇幼",
-      "w1Sales": 260279.18,
-      "w2Sales": 210066.64,
-      "w1MarginAmount": 48020.98,
-      "w2MarginAmount": 31140.44,
-      "customers": [
-        {
-          "name": "西安小猪配齐供应链管理有限公司（西北妇幼）（三楼）",
-          "w1Sales": 182607.75,
-          "w2Sales": 147198.48,
-          "w1MarginAmount": 35534.32,
-          "w2MarginAmount": 23060.75
+          "w1Sales": 837.22,
+          "w2Sales": 14289.59,
+          "w1MarginAmount": -7.44,
+          "w2MarginAmount": 900.13
         },
         {
-          "name": "西安小猪配齐供应链管理有限公司（西北妇幼）(一楼面点)",
-          "w1Sales": 36361.78,
-          "w2Sales": 26518.06,
-          "w1MarginAmount": 6609.32,
-          "w2MarginAmount": 3337.12
-        },
-        {
-          "name": "西安小猪配齐供应链管理有限公司（西北妇幼）(后宰门)",
-          "w1Sales": 28665.47,
-          "w2Sales": 24629.02,
-          "w1MarginAmount": 5042.46,
-          "w2MarginAmount": 3852.03
-        },
-        {
-          "name": "西安小猪配齐供应链管理有限公司（西北妇幼）(二楼病员A)",
-          "w1Sales": 7835.67,
-          "w2Sales": 7498.82,
-          "w1MarginAmount": -231.04,
-          "w2MarginAmount": -158.99
-        },
-        {
-          "name": "西安小猪配齐供应链管理有限公司（西北妇幼）(二楼营养餐)",
-          "w1Sales": 3444.91,
-          "w2Sales": 2979.3,
-          "w1MarginAmount": 620.34,
-          "w2MarginAmount": 699.7
-        },
-        {
-          "name": "西安小猪配齐供应链管理有限公司（西北妇幼）（二楼病员面点)",
-          "w1Sales": 1016.88,
-          "w2Sales": 866.93,
-          "w1MarginAmount": 441.49,
-          "w2MarginAmount": 335.05
-        },
-        {
-          "name": "西安小猪配齐供应链管理有限公司（西北妇幼）(二楼营养餐-水果)",
-          "w1Sales": 346.72,
-          "w2Sales": 376.03,
-          "w1MarginAmount": 4.09,
-          "w2MarginAmount": 14.78
-        }
-      ]
-    },
-    {
-      "company": "631所",
-      "w1Sales": 107329.77,
-      "w2Sales": 142788.51,
-      "w1MarginAmount": 4991.2,
-      "w2MarginAmount": 9526.52,
-      "customers": [
-        {
-          "name": "中国航空工业集团公司西安航空计算技术研究所",
-          "w1Sales": 0.0,
-          "w2Sales": 132297.23,
-          "w1MarginAmount": 0.0,
-          "w2MarginAmount": 9044.13
-        },
-        {
-          "name": "631厂研究院",
-          "w1Sales": 107329.77,
-          "w2Sales": 10491.28,
-          "w1MarginAmount": 4991.2,
-          "w2MarginAmount": 482.39
+          "name": "华润万家生活超市有限公司（西京医院卫队餐厅）",
+          "w1Sales": 7486.59,
+          "w2Sales": 7410.37,
+          "w1MarginAmount": 217.04,
+          "w2MarginAmount": 582.29
         }
       ]
     },
     {
       "company": "中航电测",
-      "w1Sales": 121405.61,
-      "w2Sales": 125415.04,
-      "w1MarginAmount": 24291.41,
-      "w2MarginAmount": 27492.92,
+      "w1Sales": 125415.04,
+      "w2Sales": 130733.34,
+      "w1MarginAmount": 26339.71,
+      "w2MarginAmount": 29829.52,
       "customers": [
         {
           "name": "中航电测仪器（西安）有限公司",
-          "w1Sales": 121405.61,
-          "w2Sales": 125415.04,
-          "w1MarginAmount": 24291.41,
-          "w2MarginAmount": 27492.92
+          "w1Sales": 125415.04,
+          "w2Sales": 130733.34,
+          "w1MarginAmount": 26339.71,
+          "w2MarginAmount": 29829.52
         }
       ]
     },
     {
       "company": "115厂",
-      "w1Sales": 101392.88,
-      "w2Sales": 103583.65,
-      "w1MarginAmount": 16842.27,
-      "w2MarginAmount": 20095.64,
+      "w1Sales": 103671.99,
+      "w2Sales": 100017.16,
+      "w1MarginAmount": 20427.86,
+      "w2MarginAmount": 17405.25,
       "customers": [
         {
           "name": "115厂三食堂",
-          "w1Sales": 49219.66,
-          "w2Sales": 51794.1,
-          "w1MarginAmount": 8887.29,
-          "w2MarginAmount": 10184.73
+          "w1Sales": 51794.1,
+          "w2Sales": 46850.86,
+          "w1MarginAmount": 10406.2,
+          "w2MarginAmount": 8428.77
         },
         {
           "name": "华润万家商业科技（陕西）有限公司（115厂一食堂)",
-          "w1Sales": 37921.2,
-          "w2Sales": 42584.6,
-          "w1MarginAmount": 6032.45,
-          "w2MarginAmount": 7905.54
+          "w1Sales": 42672.94,
+          "w2Sales": 38457.97,
+          "w1MarginAmount": 7955.28,
+          "w2MarginAmount": 6761.33
         },
         {
           "name": "115厂二食堂",
-          "w1Sales": 14252.02,
-          "w2Sales": 9204.95,
-          "w1MarginAmount": 1922.53,
-          "w2MarginAmount": 2005.37
+          "w1Sales": 9204.95,
+          "w2Sales": 14708.33,
+          "w1MarginAmount": 2066.38,
+          "w2MarginAmount": 2215.15
+        }
+      ]
+    },
+    {
+      "company": "金湾中学",
+      "w1Sales": 0.0,
+      "w2Sales": 66079.27,
+      "w1MarginAmount": 0.0,
+      "w2MarginAmount": 19385.1,
+      "customers": [
+        {
+          "name": "西安经发物业股份有限公司(金湾中学)",
+          "w1Sales": 0.0,
+          "w2Sales": 66079.27,
+          "w1MarginAmount": 0.0,
+          "w2MarginAmount": 19385.1
         }
       ]
     },
     {
       "company": "口腔医院肉",
-      "w1Sales": 57654.87,
-      "w2Sales": 56979.79,
-      "w1MarginAmount": 7211.09,
-      "w2MarginAmount": 5848.34,
+      "w1Sales": 56979.79,
+      "w2Sales": 61173.22,
+      "w1MarginAmount": 5858.34,
+      "w2MarginAmount": 7805.45,
       "customers": [
         {
           "name": "华润万家生活超市有限公司（口腔医院肉）",
-          "w1Sales": 57654.87,
-          "w2Sales": 56979.79,
-          "w1MarginAmount": 7211.09,
-          "w2MarginAmount": 5848.34
+          "w1Sales": 56979.79,
+          "w2Sales": 61173.22,
+          "w1MarginAmount": 5858.34,
+          "w2MarginAmount": 7805.45
         }
       ]
     },
     {
-      "company": "千古情景区餐厅",
-      "w1Sales": 68459.16,
-      "w2Sales": 47410.15,
-      "w1MarginAmount": 19935.42,
-      "w2MarginAmount": 14425.02,
+      "company": "西北妇幼",
+      "w1Sales": 210349.19,
+      "w2Sales": 57352.55,
+      "w1MarginAmount": 32415.98,
+      "w2MarginAmount": 9729.21,
       "customers": [
         {
-          "name": "陕西新桂餐饮管理有限公司（千古情景区餐厅）",
-          "w1Sales": 68459.16,
-          "w2Sales": 47410.15,
-          "w1MarginAmount": 19935.42,
-          "w2MarginAmount": 14425.02
+          "name": "西安小猪配齐供应链管理有限公司（西北妇幼）（三楼）",
+          "w1Sales": 147009.68,
+          "w2Sales": 36682.87,
+          "w1MarginAmount": 23953.69,
+          "w2MarginAmount": 7470.86
+        },
+        {
+          "name": "西安小猪配齐供应链管理有限公司（西北妇幼）(一楼面点)",
+          "w1Sales": 25866.52,
+          "w2Sales": 9690.72,
+          "w1MarginAmount": 3288.17,
+          "w2MarginAmount": 1282.97
+        },
+        {
+          "name": "西安小猪配齐供应链管理有限公司（西北妇幼）(后宰门)",
+          "w1Sales": 24728.77,
+          "w2Sales": 5917.69,
+          "w1MarginAmount": 3781.47,
+          "w2MarginAmount": 478.85
+        },
+        {
+          "name": "西安小猪配齐供应链管理有限公司（西北妇幼）(二楼病员A)",
+          "w1Sales": 7213.61,
+          "w2Sales": 3276.77,
+          "w1MarginAmount": -119.1,
+          "w2MarginAmount": -50.06
+        },
+        {
+          "name": "西安小猪配齐供应链管理有限公司（西北妇幼）(二楼营养餐)",
+          "w1Sales": 4084.57,
+          "w2Sales": 962.3,
+          "w1MarginAmount": 1041.62,
+          "w2MarginAmount": 248.87
+        },
+        {
+          "name": "西安小猪配齐供应链管理有限公司（西北妇幼）（二楼病员面点)",
+          "w1Sales": 1064.32,
+          "w2Sales": 675.63,
+          "w1MarginAmount": 428.6,
+          "w2MarginAmount": 297.6
+        },
+        {
+          "name": "西安小猪配齐供应链管理有限公司（西北妇幼）(二楼营养餐-水果)",
+          "w1Sales": 381.72,
+          "w2Sales": 146.57,
+          "w1MarginAmount": 41.53,
+          "w2MarginAmount": 0.12
         }
       ]
     },
     {
-      "company": "32705部队",
-      "w1Sales": 36281.95,
-      "w2Sales": 46563.02,
-      "w1MarginAmount": 624.16,
-      "w2MarginAmount": 5879.39,
+      "company": "西咸新区沣西小学",
+      "w1Sales": 0.0,
+      "w2Sales": 48594.61,
+      "w1MarginAmount": 0.0,
+      "w2MarginAmount": 8016.93,
       "customers": [
         {
-          "name": "32705部队中晚",
-          "w1Sales": 36281.95,
-          "w2Sales": 46563.02,
-          "w1MarginAmount": 624.16,
-          "w2MarginAmount": 5879.39
-        }
-      ]
-    },
-    {
-      "company": "排水集团",
-      "w1Sales": 39591.06,
-      "w2Sales": 39314.33,
-      "w1MarginAmount": 9755.62,
-      "w2MarginAmount": 9773.58,
-      "customers": [
+          "name": "西咸新区沣西第一小学",
+          "w1Sales": 0.0,
+          "w2Sales": 24381.6,
+          "w1MarginAmount": 0.0,
+          "w2MarginAmount": 4336.1
+        },
         {
-          "name": "西安排水集团有限公司",
-          "w1Sales": 39591.06,
-          "w2Sales": 39314.33,
-          "w1MarginAmount": 9755.62,
-          "w2MarginAmount": 9773.58
+          "name": "陕西省西咸新区沣西新城第三小学",
+          "w1Sales": 0.0,
+          "w2Sales": 12955.76,
+          "w1MarginAmount": 0.0,
+          "w2MarginAmount": 1974.2
+        },
+        {
+          "name": "西咸新区沣西第一小学尚雅校区",
+          "w1Sales": 0.0,
+          "w2Sales": 11257.25,
+          "w1MarginAmount": 0.0,
+          "w2MarginAmount": 1706.63
         }
       ]
     },
     {
       "company": "口腔医院干调",
-      "w1Sales": 44178.71,
-      "w2Sales": 37869.88,
-      "w1MarginAmount": 4127.97,
-      "w2MarginAmount": 3599.38,
+      "w1Sales": 38682.89,
+      "w2Sales": 46035.85,
+      "w1MarginAmount": 3702.39,
+      "w2MarginAmount": 3914.07,
       "customers": [
         {
           "name": "华润万家生活超市有限公司（口腔医院干调）",
-          "w1Sales": 44178.71,
-          "w2Sales": 37869.88,
-          "w1MarginAmount": 4127.97,
-          "w2MarginAmount": 3599.38
+          "w1Sales": 38682.89,
+          "w2Sales": 46035.85,
+          "w1MarginAmount": 3702.39,
+          "w2MarginAmount": 3914.07
         }
       ]
     },
     {
-      "company": "经开消防大队",
-      "w1Sales": 38706.46,
-      "w2Sales": 36174.08,
-      "w1MarginAmount": 5250.94,
-      "w2MarginAmount": 4982.12,
+      "company": "631所",
+      "w1Sales": 142788.51,
+      "w2Sales": 43064.8,
+      "w1MarginAmount": 9346.45,
+      "w2MarginAmount": 2866.45,
       "customers": [
         {
-          "name": "CZ08民经一路、凤鸣路、尚稷路、永徽路",
-          "w1Sales": 9822.96,
-          "w2Sales": 8651.81,
-          "w1MarginAmount": 1602.98,
-          "w2MarginAmount": 1068.06
+          "name": "中国航空工业集团公司西安航空计算技术研究所",
+          "w1Sales": 132297.23,
+          "w2Sales": 43064.8,
+          "w1MarginAmount": 8824.46,
+          "w2MarginAmount": 2866.45
         },
         {
-          "name": "CZ05渭华路消防站",
-          "w1Sales": 8517.98,
-          "w2Sales": 7778.55,
-          "w1MarginAmount": 746.94,
-          "w2MarginAmount": 656.98
-        },
-        {
-          "name": "CZ07凤城六路消防站",
-          "w1Sales": 6643.5,
-          "w2Sales": 7140.9,
-          "w1MarginAmount": 898.8,
-          "w2MarginAmount": 1156.71
-        },
-        {
-          "name": "CZ03鸿明路消防站",
-          "w1Sales": 8161.22,
-          "w2Sales": 6544.44,
-          "w1MarginAmount": 1350.83,
-          "w2MarginAmount": 1175.47
-        },
-        {
-          "name": "CZ06经开消防大队",
-          "w1Sales": 3939.87,
-          "w2Sales": 4039.39,
-          "w1MarginAmount": 395.41,
-          "w2MarginAmount": 627.99
-        },
-        {
-          "name": "CZ04渭环东路消防站",
-          "w1Sales": 1620.93,
-          "w2Sales": 2018.99,
-          "w1MarginAmount": 255.98,
-          "w2MarginAmount": 296.91
-        }
-      ]
-    },
-    {
-      "company": "95960部队（阎良试飞局）",
-      "w1Sales": 33830.31,
-      "w2Sales": 32742.22,
-      "w1MarginAmount": 4374.1,
-      "w2MarginAmount": 4539.53,
-      "customers": [
-        {
-          "name": "中国人民解放军95960部队(阎良试飞局)",
-          "w1Sales": 33830.31,
-          "w2Sales": 32742.22,
-          "w1MarginAmount": 4374.1,
-          "w2MarginAmount": 4539.53
-        }
-      ]
-    },
-    {
-      "company": "西北大学第一医院",
-      "w1Sales": 31688.73,
-      "w2Sales": 31397.15,
-      "w1MarginAmount": 3728.51,
-      "w2MarginAmount": 4190.02,
-      "customers": [
-        {
-          "name": "西北大学第一医院",
-          "w1Sales": 31688.73,
-          "w2Sales": 31397.15,
-          "w1MarginAmount": 3728.51,
-          "w2MarginAmount": 4190.02
-        }
-      ]
-    },
-    {
-      "company": "口腔医院蔬菜",
-      "w1Sales": 28618.58,
-      "w2Sales": 30683.5,
-      "w1MarginAmount": 3184.27,
-      "w2MarginAmount": 3687.57,
-      "customers": [
-        {
-          "name": "华润万家生活超市有限公司（口腔医院蔬菜）",
-          "w1Sales": 28618.58,
-          "w2Sales": 30683.5,
-          "w1MarginAmount": 3184.27,
-          "w2MarginAmount": 3687.57
+          "name": "631厂研究院",
+          "w1Sales": 10491.28,
+          "w2Sales": 0.0,
+          "w1MarginAmount": 521.99,
+          "w2MarginAmount": 0.0
         }
       ]
     },
     {
       "company": "咸阳市管局",
-      "w1Sales": 42197.11,
-      "w2Sales": 30306.55,
-      "w1MarginAmount": 3721.3,
-      "w2MarginAmount": 3041.85,
+      "w1Sales": 30323.25,
+      "w2Sales": 38604.04,
+      "w1MarginAmount": 3119.71,
+      "w2MarginAmount": 4063.26,
       "customers": [
         {
           "name": "咸阳市机关事务管理局",
-          "w1Sales": 28573.6,
-          "w2Sales": 25719.32,
-          "w1MarginAmount": 2056.44,
-          "w2MarginAmount": 2375.11
+          "w1Sales": 25741.0,
+          "w2Sales": 26647.36,
+          "w1MarginAmount": 2442.14,
+          "w2MarginAmount": 3093.45
         },
         {
           "name": "咸阳市委",
-          "w1Sales": 13623.51,
-          "w2Sales": 4587.23,
-          "w1MarginAmount": 1664.86,
-          "w2MarginAmount": 666.74
+          "w1Sales": 4582.25,
+          "w2Sales": 11956.68,
+          "w1MarginAmount": 677.57,
+          "w2MarginAmount": 969.81
         }
       ]
     },
     {
-      "company": "葛洲坝",
-      "w1Sales": 26712.77,
-      "w2Sales": 28691.04,
-      "w1MarginAmount": 2335.48,
-      "w2MarginAmount": 2993.64,
+      "company": "95960部队（阎良试飞局）",
+      "w1Sales": 33659.44,
+      "w2Sales": 36077.42,
+      "w1MarginAmount": 4192.48,
+      "w2MarginAmount": 5283.37,
       "customers": [
         {
-          "name": "中国葛洲坝集团文旅发展有限公司（葛洲坝集团三公司）",
-          "w1Sales": 26712.77,
-          "w2Sales": 28691.04,
-          "w1MarginAmount": 2335.48,
-          "w2MarginAmount": 2993.64
+          "name": "中国人民解放军95960部队(阎良试飞局)",
+          "w1Sales": 33659.44,
+          "w2Sales": 36077.42,
+          "w1MarginAmount": 4192.48,
+          "w2MarginAmount": 5283.37
+        }
+      ]
+    },
+    {
+      "company": "32705部队",
+      "w1Sales": 47375.56,
+      "w2Sales": 33239.94,
+      "w1MarginAmount": 6334.03,
+      "w2MarginAmount": 1751.46,
+      "customers": [
+        {
+          "name": "32705部队中晚",
+          "w1Sales": 47375.56,
+          "w2Sales": 33239.94,
+          "w1MarginAmount": 6334.03,
+          "w2MarginAmount": 1751.46
+        }
+      ]
+    },
+    {
+      "company": "口腔医院蔬菜",
+      "w1Sales": 30683.5,
+      "w2Sales": 30944.2,
+      "w1MarginAmount": 3699.35,
+      "w2MarginAmount": 1789.48,
+      "customers": [
+        {
+          "name": "华润万家生活超市有限公司（口腔医院蔬菜）",
+          "w1Sales": 30683.5,
+          "w2Sales": 30944.2,
+          "w1MarginAmount": 3699.35,
+          "w2MarginAmount": 1789.48
+        }
+      ]
+    },
+    {
+      "company": "经开消防大队",
+      "w1Sales": 39453.25,
+      "w2Sales": 29524.02,
+      "w1MarginAmount": 5709.03,
+      "w2MarginAmount": 3305.56,
+      "customers": [
+        {
+          "name": "CZ08民经一路、凤鸣路、尚稷路、永徽路",
+          "w1Sales": 10574.69,
+          "w2Sales": 7000.17,
+          "w1MarginAmount": 1261.86,
+          "w2MarginAmount": 789.84
+        },
+        {
+          "name": "CZ05渭华路消防站",
+          "w1Sales": 9051.38,
+          "w2Sales": 6295.17,
+          "w1MarginAmount": 1105.81,
+          "w2MarginAmount": 598.77
+        },
+        {
+          "name": "CZ03鸿明路消防站",
+          "w1Sales": 6554.44,
+          "w2Sales": 6070.13,
+          "w1MarginAmount": 1245.98,
+          "w2MarginAmount": 813.81
+        },
+        {
+          "name": "CZ07凤城六路消防站",
+          "w1Sales": 7230.46,
+          "w2Sales": 5151.12,
+          "w1MarginAmount": 1165.3,
+          "w2MarginAmount": 882.07
+        },
+        {
+          "name": "CZ06经开消防大队",
+          "w1Sales": 4385.41,
+          "w2Sales": 3674.78,
+          "w1MarginAmount": 679.53,
+          "w2MarginAmount": 476.15
+        },
+        {
+          "name": "CZ04渭环东路消防站",
+          "w1Sales": 1656.87,
+          "w2Sales": 1332.65,
+          "w1MarginAmount": 250.55,
+          "w2MarginAmount": -255.08
         }
       ]
     },
     {
       "company": "大修厂",
-      "w1Sales": 28372.94,
-      "w2Sales": 27350.4,
-      "w1MarginAmount": 4269.32,
-      "w2MarginAmount": 4561.87,
+      "w1Sales": 27004.3,
+      "w2Sales": 27855.32,
+      "w1MarginAmount": 4205.18,
+      "w2MarginAmount": 4643.98,
       "customers": [
         {
           "name": "大修厂-临潼",
-          "w1Sales": 24199.36,
-          "w2Sales": 23717.01,
-          "w1MarginAmount": 3465.92,
-          "w2MarginAmount": 4162.3
+          "w1Sales": 23773.86,
+          "w2Sales": 24278.89,
+          "w1MarginAmount": 3846.59,
+          "w2MarginAmount": 3857.18
         },
         {
           "name": "大修厂-西安",
-          "w1Sales": 4173.58,
-          "w2Sales": 3633.39,
-          "w1MarginAmount": 803.4,
-          "w2MarginAmount": 399.57
+          "w1Sales": 3230.44,
+          "w2Sales": 3576.43,
+          "w1MarginAmount": 358.59,
+          "w2MarginAmount": 786.8
         }
       ]
     },
     {
-      "company": "省天然气",
-      "w1Sales": 13147.16,
-      "w2Sales": 24816.71,
-      "w1MarginAmount": 2366.71,
-      "w2MarginAmount": 4211.58,
+      "company": "葛洲坝",
+      "w1Sales": 30567.21,
+      "w2Sales": 27382.19,
+      "w1MarginAmount": 2591.7,
+      "w2MarginAmount": 2906.55,
       "customers": [
         {
-          "name": "省天然气",
-          "w1Sales": 13147.16,
-          "w2Sales": 24816.71,
-          "w1MarginAmount": 2366.71,
-          "w2MarginAmount": 4211.58
+          "name": "中国葛洲坝集团文旅发展有限公司（葛洲坝集团三公司）",
+          "w1Sales": 30567.21,
+          "w2Sales": 27382.19,
+          "w1MarginAmount": 2591.7,
+          "w2MarginAmount": 2906.55
         }
       ]
     },
     {
-      "company": "稀有金属",
-      "w1Sales": 24134.81,
-      "w2Sales": 24118.99,
-      "w1MarginAmount": 4923.26,
-      "w2MarginAmount": 4872.29,
+      "company": "航空基地第一初级中学",
+      "w1Sales": 0.0,
+      "w2Sales": 25400.44,
+      "w1MarginAmount": 0.0,
+      "w2MarginAmount": 4995.18,
       "customers": [
         {
-          "name": "西安稀有金属材料研究院有限公司",
-          "w1Sales": 24134.81,
-          "w2Sales": 24118.99,
-          "w1MarginAmount": 4923.26,
-          "w2MarginAmount": 4872.29
+          "name": "西安市航空基地第一初级中学",
+          "w1Sales": 0.0,
+          "w2Sales": 25400.44,
+          "w1MarginAmount": 0.0,
+          "w2MarginAmount": 4995.18
         }
       ]
     },
     {
       "company": "陕西省工人疗养院",
-      "w1Sales": 20622.84,
-      "w2Sales": 23292.85,
-      "w1MarginAmount": 4695.97,
-      "w2MarginAmount": 5768.01,
+      "w1Sales": 23290.98,
+      "w2Sales": 24854.42,
+      "w1MarginAmount": 5799.74,
+      "w2MarginAmount": 6176.14,
       "customers": [
         {
           "name": "陕西省工人疗养院（大餐厅）",
-          "w1Sales": 20622.84,
-          "w2Sales": 23292.85,
-          "w1MarginAmount": 4695.97,
-          "w2MarginAmount": 5768.01
+          "w1Sales": 23290.98,
+          "w2Sales": 24854.42,
+          "w1MarginAmount": 5799.74,
+          "w2MarginAmount": 6176.14
         }
       ]
     },
     {
       "company": "交建",
-      "w1Sales": 19725.27,
-      "w2Sales": 17681.18,
-      "w1MarginAmount": 4191.44,
-      "w2MarginAmount": 4664.69,
+      "w1Sales": 17719.68,
+      "w2Sales": 23223.22,
+      "w1MarginAmount": 4590.19,
+      "w2MarginAmount": 6032.48,
       "customers": [
         {
           "name": "陕西交建后勤服务有限公司伙食管理委员会",
-          "w1Sales": 19725.27,
-          "w2Sales": 17681.18,
-          "w1MarginAmount": 4191.44,
-          "w2MarginAmount": 4664.69
+          "w1Sales": 17719.68,
+          "w2Sales": 23223.22,
+          "w1MarginAmount": 4590.19,
+          "w2MarginAmount": 6032.48
         }
       ]
     },
     {
-      "company": "延长石油新兴产业有限公司",
-      "w1Sales": 14531.58,
-      "w2Sales": 16091.81,
-      "w1MarginAmount": 4944.84,
-      "w2MarginAmount": 5516.16,
+      "company": "稀有金属",
+      "w1Sales": 24103.99,
+      "w2Sales": 23193.41,
+      "w1MarginAmount": 5040.13,
+      "w2MarginAmount": 5019.7,
       "customers": [
         {
-          "name": "陕西延长石油新兴产业有限公司",
-          "w1Sales": 14531.58,
-          "w2Sales": 16091.81,
-          "w1MarginAmount": 4944.84,
-          "w2MarginAmount": 5516.16
+          "name": "西安稀有金属材料研究院有限公司",
+          "w1Sales": 24103.99,
+          "w2Sales": 23193.41,
+          "w1MarginAmount": 5040.13,
+          "w2MarginAmount": 5019.7
         }
       ]
     },
     {
-      "company": "秦岭宾馆",
-      "w1Sales": 14740.31,
-      "w2Sales": 12839.71,
-      "w1MarginAmount": 2082.17,
-      "w2MarginAmount": 3263.5,
+      "company": "航空基地第一小学",
+      "w1Sales": 0.0,
+      "w2Sales": 23106.0,
+      "w1MarginAmount": 0.0,
+      "w2MarginAmount": 5406.0,
       "customers": [
         {
-          "name": "华润万家商业科技（陕西）有限公司（115厂秦岭宾馆）",
-          "w1Sales": 14740.31,
-          "w2Sales": 12839.71,
-          "w1MarginAmount": 2082.17,
-          "w2MarginAmount": 3263.5
-        }
-      ]
-    },
-    {
-      "company": "西咸新区轨道交通",
-      "w1Sales": 10875.95,
-      "w2Sales": 11704.4,
-      "w1MarginAmount": 2197.84,
-      "w2MarginAmount": 2638.43,
-      "customers": [
-        {
-          "name": "西咸新区轨道交通发展有限公司",
-          "w1Sales": 10875.95,
-          "w2Sales": 11704.4,
-          "w1MarginAmount": 2197.84,
-          "w2MarginAmount": 2638.43
-        }
-      ]
-    },
-    {
-      "company": "西安中铁轨道交通有限公司",
-      "w1Sales": 12576.1,
-      "w2Sales": 10764.15,
-      "w1MarginAmount": 1273.15,
-      "w2MarginAmount": 1051.35,
-      "customers": [
-        {
-          "name": "西安中铁轨道交通有限公司（西安地铁临潼线）",
-          "w1Sales": 12576.1,
-          "w2Sales": 10764.15,
-          "w1MarginAmount": 1273.15,
-          "w2MarginAmount": 1051.35
-        }
-      ]
-    },
-    {
-      "company": "盛世金源电力装备有限公司",
-      "w1Sales": 11418.13,
-      "w2Sales": 10740.01,
-      "w1MarginAmount": 1902.86,
-      "w2MarginAmount": 1723.02,
-      "customers": [
-        {
-          "name": "陕西盛世金源电力装备有限公司",
-          "w1Sales": 11418.13,
-          "w2Sales": 10740.01,
-          "w1MarginAmount": 1902.86,
-          "w2MarginAmount": 1723.02
+          "name": "西安航空基地第一小学",
+          "w1Sales": 0.0,
+          "w2Sales": 23106.0,
+          "w1MarginAmount": 0.0,
+          "w2MarginAmount": 5406.0
         }
       ]
     },
     {
       "company": "未央区教育局",
-      "w1Sales": 1707.76,
-      "w2Sales": 8223.48,
-      "w1MarginAmount": 475.7,
-      "w2MarginAmount": 2052.71,
+      "w1Sales": 8223.48,
+      "w2Sales": 20316.78,
+      "w1MarginAmount": 2052.71,
+      "w2MarginAmount": 4866.01,
       "customers": [
         {
           "name": "西安市团结实验学校",
-          "w1Sales": 1707.76,
-          "w2Sales": 8223.48,
-          "w1MarginAmount": 475.7,
-          "w2MarginAmount": 2052.71
+          "w1Sales": 8223.48,
+          "w2Sales": 20316.78,
+          "w1MarginAmount": 2052.71,
+          "w2MarginAmount": 4866.01
+        }
+      ]
+    },
+    {
+      "company": "千古情景区餐厅",
+      "w1Sales": 46975.05,
+      "w2Sales": 20088.47,
+      "w1MarginAmount": 14395.81,
+      "w2MarginAmount": 6108.62,
+      "customers": [
+        {
+          "name": "陕西新桂餐饮管理有限公司（千古情景区餐厅）",
+          "w1Sales": 46975.05,
+          "w2Sales": 20088.47,
+          "w1MarginAmount": 14395.81,
+          "w2MarginAmount": 6108.62
+        }
+      ]
+    },
+    {
+      "company": "沣东第十小学（肉禽蛋类）",
+      "w1Sales": 0.0,
+      "w2Sales": 18894.6,
+      "w1MarginAmount": 0.0,
+      "w2MarginAmount": 3801.91,
+      "customers": [
+        {
+          "name": "西咸新区沣东第十小学",
+          "w1Sales": 0.0,
+          "w2Sales": 18894.6,
+          "w1MarginAmount": 0.0,
+          "w2MarginAmount": 3801.91
         }
       ]
     },
     {
       "company": "电力中心医院",
-      "w1Sales": 9415.95,
-      "w2Sales": 7400.62,
-      "w1MarginAmount": 2847.57,
-      "w2MarginAmount": 2502.45,
+      "w1Sales": 7400.62,
+      "w2Sales": 16163.9,
+      "w1MarginAmount": 2492.71,
+      "w2MarginAmount": 3284.45,
       "customers": [
         {
           "name": "铜川金福来餐饮管理有限公司西安第一分公司",
-          "w1Sales": 9415.95,
-          "w2Sales": 7400.62,
-          "w1MarginAmount": 2847.57,
-          "w2MarginAmount": 2502.45
+          "w1Sales": 7400.62,
+          "w2Sales": 16163.9,
+          "w1MarginAmount": 2492.71,
+          "w2MarginAmount": 3284.45
         }
       ]
     },
     {
-      "company": "西安市第二聋哑学校",
-      "w1Sales": 0.0,
-      "w2Sales": 4400.0,
-      "w1MarginAmount": 0.0,
-      "w2MarginAmount": 483.02,
+      "company": "西北大学第一医院",
+      "w1Sales": 31175.15,
+      "w2Sales": 14508.8,
+      "w1MarginAmount": 4150.47,
+      "w2MarginAmount": 1946.67,
       "customers": [
         {
-          "name": "西安市第二聋哑学校",
+          "name": "西北大学第一医院",
+          "w1Sales": 31175.15,
+          "w2Sales": 14508.8,
+          "w1MarginAmount": 4150.47,
+          "w2MarginAmount": 1946.67
+        }
+      ]
+    },
+    {
+      "company": "西北妇幼（干调）",
+      "w1Sales": 0.0,
+      "w2Sales": 14322.1,
+      "w1MarginAmount": 0.0,
+      "w2MarginAmount": 3017.08,
+      "customers": [
+        {
+          "name": "陕西开芯农副产品有限公司（西北妇幼）（库房）",
           "w1Sales": 0.0,
-          "w2Sales": 4400.0,
+          "w2Sales": 5780.3,
           "w1MarginAmount": 0.0,
-          "w2MarginAmount": 483.02
+          "w2MarginAmount": 1195.24
+        },
+        {
+          "name": "陕西开芯农副产品有限公司（西北妇幼）（老院 干货）",
+          "w1Sales": 0.0,
+          "w2Sales": 3867.5,
+          "w1MarginAmount": 0.0,
+          "w2MarginAmount": 825.56
+        },
+        {
+          "name": "西北妇幼（职工）",
+          "w1Sales": 0.0,
+          "w2Sales": 2658.3,
+          "w1MarginAmount": 0.0,
+          "w2MarginAmount": 704.28
+        },
+        {
+          "name": "陕西开芯农副产品有限公司（西北妇幼）（茶餐厅干货）",
+          "w1Sales": 0.0,
+          "w2Sales": 1426.0,
+          "w1MarginAmount": 0.0,
+          "w2MarginAmount": 270.9
+        },
+        {
+          "name": "陕西开芯农副产品有限公司（西北妇幼）（二楼病员）",
+          "w1Sales": 0.0,
+          "w2Sales": 419.0,
+          "w1MarginAmount": 0.0,
+          "w2MarginAmount": 64.1
+        },
+        {
+          "name": "陕西开芯农副产品有限公司（西北妇幼）（二楼营养餐）",
+          "w1Sales": 0.0,
+          "w2Sales": 171.0,
+          "w1MarginAmount": 0.0,
+          "w2MarginAmount": -43.0
+        }
+      ]
+    },
+    {
+      "company": "延长石油新兴产业有限公司",
+      "w1Sales": 16091.81,
+      "w2Sales": 14084.15,
+      "w1MarginAmount": 5522.48,
+      "w2MarginAmount": 4947.44,
+      "customers": [
+        {
+          "name": "陕西延长石油新兴产业有限公司",
+          "w1Sales": 16091.81,
+          "w2Sales": 14084.15,
+          "w1MarginAmount": 5522.48,
+          "w2MarginAmount": 4947.44
+        }
+      ]
+    },
+    {
+      "company": "西安市曲江第一中学",
+      "w1Sales": 0.0,
+      "w2Sales": 13610.0,
+      "w1MarginAmount": 0.0,
+      "w2MarginAmount": 3182.0,
+      "customers": [
+        {
+          "name": "西安市曲江第一中学",
+          "w1Sales": 0.0,
+          "w2Sales": 13610.0,
+          "w1MarginAmount": 0.0,
+          "w2MarginAmount": 3182.0
+        }
+      ]
+    },
+    {
+      "company": "秦岭宾馆",
+      "w1Sales": 10733.99,
+      "w2Sales": 13090.8,
+      "w1MarginAmount": 1597.32,
+      "w2MarginAmount": 1658.9,
+      "customers": [
+        {
+          "name": "华润万家商业科技（陕西）有限公司（115厂秦岭宾馆）",
+          "w1Sales": 10733.99,
+          "w2Sales": 13090.8,
+          "w1MarginAmount": 1597.32,
+          "w2MarginAmount": 1658.9
+        }
+      ]
+    },
+    {
+      "company": "排水集团",
+      "w1Sales": 39969.61,
+      "w2Sales": 11950.11,
+      "w1MarginAmount": 9679.39,
+      "w2MarginAmount": 2598.4,
+      "customers": [
+        {
+          "name": "西安排水集团有限公司",
+          "w1Sales": 39969.61,
+          "w2Sales": 11950.11,
+          "w1MarginAmount": 9679.39,
+          "w2MarginAmount": 2598.4
+        }
+      ]
+    },
+    {
+      "company": "省天然气",
+      "w1Sales": 21740.87,
+      "w2Sales": 11618.25,
+      "w1MarginAmount": 3926.52,
+      "w2MarginAmount": 1206.17,
+      "customers": [
+        {
+          "name": "省天然气",
+          "w1Sales": 21740.87,
+          "w2Sales": 11618.25,
+          "w1MarginAmount": 3926.52,
+          "w2MarginAmount": 1206.17
+        }
+      ]
+    },
+    {
+      "company": "沣东小学（蛋奶）",
+      "w1Sales": 0.0,
+      "w2Sales": 10747.26,
+      "w1MarginAmount": 0.0,
+      "w2MarginAmount": 1895.0,
+      "customers": [
+        {
+          "name": "西安沣东第二小学",
+          "w1Sales": 0.0,
+          "w2Sales": 4808.46,
+          "w1MarginAmount": 0.0,
+          "w2MarginAmount": 612.9
+        },
+        {
+          "name": "陕西省西咸新区沣东新城第四小学",
+          "w1Sales": 0.0,
+          "w2Sales": 3240.0,
+          "w1MarginAmount": 0.0,
+          "w2MarginAmount": 914.3
+        },
+        {
+          "name": "西安沣东第三小学",
+          "w1Sales": 0.0,
+          "w2Sales": 2698.8,
+          "w1MarginAmount": 0.0,
+          "w2MarginAmount": 367.8
+        }
+      ]
+    },
+    {
+      "company": "盛世金源电力装备有限公司",
+      "w1Sales": 10742.17,
+      "w2Sales": 10357.32,
+      "w1MarginAmount": 1715.66,
+      "w2MarginAmount": 1664.22,
+      "customers": [
+        {
+          "name": "陕西盛世金源电力装备有限公司",
+          "w1Sales": 10742.17,
+          "w2Sales": 10357.32,
+          "w1MarginAmount": 1715.66,
+          "w2MarginAmount": 1664.22
+        }
+      ]
+    },
+    {
+      "company": "西咸新区轨道交通",
+      "w1Sales": 11704.4,
+      "w2Sales": 10287.86,
+      "w1MarginAmount": 2662.39,
+      "w2MarginAmount": 2380.67,
+      "customers": [
+        {
+          "name": "西咸新区轨道交通发展有限公司",
+          "w1Sales": 11704.4,
+          "w2Sales": 10287.86,
+          "w1MarginAmount": 2662.39,
+          "w2MarginAmount": 2380.67
+        }
+      ]
+    },
+    {
+      "company": "沣东教育局",
+      "w1Sales": 0.0,
+      "w2Sales": 9517.98,
+      "w1MarginAmount": 0.0,
+      "w2MarginAmount": 1773.03,
+      "customers": [
+        {
+          "name": "西安市未央区阿房路一校",
+          "w1Sales": 0.0,
+          "w2Sales": 4938.53,
+          "w1MarginAmount": 0.0,
+          "w2MarginAmount": 917.07
+        },
+        {
+          "name": "西安沣东阿房路学校",
+          "w1Sales": 0.0,
+          "w2Sales": 4579.45,
+          "w1MarginAmount": 0.0,
+          "w2MarginAmount": 855.96
+        }
+      ]
+    },
+    {
+      "company": "西安中铁轨道交通有限公司",
+      "w1Sales": 10941.8,
+      "w2Sales": 9441.97,
+      "w1MarginAmount": 1056.47,
+      "w2MarginAmount": 856.95,
+      "customers": [
+        {
+          "name": "西安中铁轨道交通有限公司（西安地铁临潼线）",
+          "w1Sales": 10941.8,
+          "w2Sales": 9441.97,
+          "w1MarginAmount": 1056.47,
+          "w2MarginAmount": 856.95
+        }
+      ]
+    },
+    {
+      "company": "航天城幼儿园",
+      "w1Sales": 0.0,
+      "w2Sales": 9062.56,
+      "w1MarginAmount": 0.0,
+      "w2MarginAmount": 1696.92,
+      "customers": [
+        {
+          "name": "西安航天城第十一幼儿园",
+          "w1Sales": 0.0,
+          "w2Sales": 4628.94,
+          "w1MarginAmount": 0.0,
+          "w2MarginAmount": 916.64
+        },
+        {
+          "name": "西安航天城第七幼儿园",
+          "w1Sales": 0.0,
+          "w2Sales": 4433.62,
+          "w1MarginAmount": 0.0,
+          "w2MarginAmount": 780.28
+        }
+      ]
+    },
+    {
+      "company": "上林学校（米面油）",
+      "w1Sales": 0.0,
+      "w2Sales": 5805.2,
+      "w1MarginAmount": 0.0,
+      "w2MarginAmount": 949.2,
+      "customers": [
+        {
+          "name": "西咸新区沣东上林学校",
+          "w1Sales": 0.0,
+          "w2Sales": 5805.2,
+          "w1MarginAmount": 0.0,
+          "w2MarginAmount": 949.2
+        }
+      ]
+    },
+    {
+      "company": "文教园第二幼儿园",
+      "w1Sales": 0.0,
+      "w2Sales": 4193.23,
+      "w1MarginAmount": 0.0,
+      "w2MarginAmount": 457.35,
+      "customers": [
+        {
+          "name": "西咸新区文教园第二幼儿园",
+          "w1Sales": 0.0,
+          "w2Sales": 4193.23,
+          "w1MarginAmount": 0.0,
+          "w2MarginAmount": 457.35
+        }
+      ]
+    },
+    {
+      "company": "西安新城区幼儿园（米面油）",
+      "w1Sales": 0.0,
+      "w2Sales": 4128.0,
+      "w1MarginAmount": 0.0,
+      "w2MarginAmount": 473.22,
+      "customers": [
+        {
+          "name": "西安新城华清学府幼儿园",
+          "w1Sales": 0.0,
+          "w2Sales": 2655.0,
+          "w1MarginAmount": 0.0,
+          "w2MarginAmount": 301.39
+        },
+        {
+          "name": "西安新城华旗东郡幼儿园",
+          "w1Sales": 0.0,
+          "w2Sales": 1473.0,
+          "w1MarginAmount": 0.0,
+          "w2MarginAmount": 171.83
         }
       ]
     },
     {
       "company": "兴平天然气",
-      "w1Sales": 3043.53,
-      "w2Sales": 2679.43,
-      "w1MarginAmount": 807.77,
-      "w2MarginAmount": 752.38,
+      "w1Sales": 2679.43,
+      "w2Sales": 2902.56,
+      "w1MarginAmount": 717.26,
+      "w2MarginAmount": 704.32,
       "customers": [
         {
           "name": "华润万家生活超市有限公司(兴平天然气)",
-          "w1Sales": 3043.53,
-          "w2Sales": 2679.43,
-          "w1MarginAmount": 807.77,
-          "w2MarginAmount": 752.38
+          "w1Sales": 2679.43,
+          "w2Sales": 2902.56,
+          "w1MarginAmount": 717.26,
+          "w2MarginAmount": 704.32
+        }
+      ]
+    },
+    {
+      "company": "建行米面油",
+      "w1Sales": 5058.0,
+      "w2Sales": 1800.0,
+      "w1MarginAmount": 132.0,
+      "w2MarginAmount": 10.0,
+      "customers": [
+        {
+          "name": "中国建设银行股份有限公司陕西省分行",
+          "w1Sales": 5058.0,
+          "w2Sales": 1800.0,
+          "w1MarginAmount": 132.0,
+          "w2MarginAmount": 10.0
+        }
+      ]
+    },
+    {
+      "company": "西安市第二聋哑学校",
+      "w1Sales": 4400.0,
+      "w2Sales": 0.0,
+      "w1MarginAmount": 483.02,
+      "w2MarginAmount": 0.0,
+      "customers": [
+        {
+          "name": "西安市第二聋哑学校",
+          "w1Sales": 4400.0,
+          "w2Sales": 0.0,
+          "w1MarginAmount": 483.02,
+          "w2MarginAmount": 0.0
         }
       ]
     }

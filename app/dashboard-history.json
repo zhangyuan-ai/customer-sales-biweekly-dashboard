@@ -30,11 +30,24 @@
       "daysCovered": 7,
       "daysInMonth": 31,
       "isPartial": false,
-      "sales": 1680070.2,
-      "marginAmount": 227185.43,
-      "marginRate": 0.135224,
-      "companyCount": 30,
-      "customerCount": 52
+      "sales": 1689249.67,
+      "marginAmount": 221404.86,
+      "marginRate": 0.131067,
+      "companyCount": 31,
+      "customerCount": 53
+    },
+    {
+      "start": "2026-08-28",
+      "end": "2026-09-03",
+      "label": "08-28 ~ 09-03",
+      "daysCovered": 7,
+      "daysInMonth": 30,
+      "isPartial": false,
+      "sales": 1712533.86,
+      "marginAmount": 245776.0,
+      "marginRate": 0.143516,
+      "companyCount": 43,
+      "customerCount": 76
     }
   ]
 }
