@@ -26,6 +26,7 @@ WEEKLY_DATA_PATH = REPO_ROOT / "app" / "dashboard-data.json"
 WEEKLY_HISTORY_PATH = REPO_ROOT / "app" / "dashboard-history.json"
 MONTHLY_DATA_PATH = REPO_ROOT / "app" / "monthly-dashboard-data.json"
 MONTHLY_HISTORY_PATH = REPO_ROOT / "app" / "monthly-dashboard-history.json"
+CUSTOMER_SERVICE_PATH = REPO_ROOT / "app" / "customer-service-map.json"
 
 
 def number(value: object) -> float:
@@ -211,6 +212,11 @@ def main() -> None:
     previous = read_report(previous_path)
     current = read_report(current_path)
     companies = build_companies(previous, current)
+    service_owners = json.loads(CUSTOMER_SERVICE_PATH.read_text(encoding="utf-8"))
+    unmapped = [
+        item["company"] for item in companies
+        if item["company"] not in service_owners and (item["w1Sales"] > 0 or item["w2Sales"] > 0)
+    ]
 
     dashboard_payload = {
         "mode": mode,
@@ -238,6 +244,8 @@ def main() -> None:
         f"销售额 {current_summary['sales']:.2f}，"
         f"毛利额 {current_summary['marginAmount']:.2f}"
     )
+    if unmapped:
+        print(f"待分配客服员（{len(unmapped)} 家）：{'、'.join(unmapped)}")
 
 
 if __name__ == "__main__":

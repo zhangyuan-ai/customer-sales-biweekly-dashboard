@@ -2,6 +2,7 @@ import weeklySource from "./dashboard-data.json";
 import weeklyHistorySource from "./dashboard-history.json";
 import monthlySource from "./monthly-dashboard-data.json";
 import monthlyHistorySource from "./monthly-dashboard-history.json";
+import customerServiceSource from "./customer-service-map.json";
 
 export type Customer = {
   name: string;
@@ -13,12 +14,20 @@ export type Customer = {
 
 export type Company = {
   company: string;
+  serviceOwner: string;
   w1Sales: number;
   w2Sales: number;
   w1MarginAmount: number;
   w2MarginAmount: number;
   customers: Customer[];
 };
+
+type CompanySource = Omit<Company, "serviceOwner">;
+const customerServiceMap = customerServiceSource as Record<string, string>;
+const withServiceOwners = (companies: CompanySource[]): Company[] => companies.map((item) => ({
+  ...item,
+  serviceOwner: customerServiceMap[item.company] ?? "未分配",
+}));
 
 export type DashboardPeriod = {
   start: string;
@@ -51,7 +60,7 @@ export const weeklyDashboard: DashboardDataset = {
   generatedAt: weeklySource.generatedAt,
   previous: weeklySource.previous,
   current: weeklySource.current,
-  companies: weeklySource.companies as Company[],
+  companies: withServiceOwners(weeklySource.companies as CompanySource[]),
   history: weeklyHistorySource.periods as HistoryPeriod[],
 };
 
@@ -60,6 +69,6 @@ export const monthlyDashboard: DashboardDataset = {
   generatedAt: monthlySource.generatedAt,
   previous: monthlySource.previous,
   current: monthlySource.current,
-  companies: monthlySource.companies as Company[],
+  companies: withServiceOwners(monthlySource.companies as CompanySource[]),
   history: monthlyHistorySource.periods as HistoryPeriod[],
 };

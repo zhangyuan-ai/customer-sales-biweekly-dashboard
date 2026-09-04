@@ -167,7 +167,7 @@ button { color: inherit; }
 
 .bar-chart { display: grid; gap: 9px; }
 .bar-row { display: grid; grid-template-columns: minmax(105px, 1.25fr) minmax(220px, 4fr) 76px; align-items: center; gap: 11px; }
-.bar-label, .delta-row > span, .rank-list li > span { min-width: 0; overflow: hidden; color: #3d4756; font-size: 11.5px; text-overflow: ellipsis; white-space: nowrap; }
+.bar-label, .delta-row > span, .rank-company { min-width: 0; overflow: hidden; color: #3d4756; font-size: 11.5px; text-overflow: ellipsis; white-space: nowrap; }
 .bar-row > b { color: #4c5767; font-size: 10.5px; text-align: right; }
 .paired-bars { display: grid; gap: 3px; }
 .paired-bars i { display: block; height: 5px; border-radius: 99px; }
@@ -185,13 +185,33 @@ button { color: inherit; }
 .rank-green { color: var(--green) !important; }
 .rank-red { color: var(--red) !important; }
 .rank-list { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
-.rank-list li { display: grid; grid-template-columns: 20px minmax(80px, 1.2fr) minmax(80px, 1fr) 50px; align-items: center; gap: 7px; }
+.rank-list li { display: grid; grid-template-columns: 20px minmax(80px, 1.2fr) 54px minmax(80px, 1fr) 50px; align-items: center; gap: 7px; }
 .rank-list em { display: grid; place-items: center; width: 19px; height: 19px; border-radius: 6px; background: #eef2f8; color: var(--sub); font-size: 9px; font-style: normal; font-weight: 750; }
 .rank-list div { height: 6px; overflow: hidden; border-radius: 99px; background: #eef1f6; }
 .rank-list i { display: block; height: 100%; border-radius: inherit; }
 .rank-high { background: linear-gradient(90deg, #74dca5, var(--green)); }
 .rank-low { background: linear-gradient(90deg, #ff9ba5, var(--red)); }
 .rank-list b { color: #4c5767; font-size: 10px; text-align: right; }
+
+.owner-summary-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap: 12px; }
+.owner-summary-card { min-width: 0; padding: 16px; border: 1px solid rgba(132,193,255,.2); border-radius: 15px; background: linear-gradient(145deg, rgba(17,55,103,.76), rgba(7,28,60,.68)); box-shadow: inset 0 1px 0 rgba(205,231,255,.1); color: #fff; font: inherit; text-align: left; cursor: pointer; transition: transform .16s ease, border-color .16s ease, box-shadow .16s ease; }
+.owner-summary-card:hover, .owner-summary-card.active { transform: translateY(-2px); border-color: rgba(92,207,255,.56); box-shadow: 0 14px 34px rgba(0,8,26,.24), inset 0 1px 0 rgba(218,238,255,.15); }
+.owner-summary-card header { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.owner-summary-card header strong { font-size: 16px; }
+.owner-summary-card header span { padding: 4px 8px; border-radius: 999px; background: rgba(255,255,255,.08); color: rgba(237,246,255,.78); font-size: 10px; }
+.owner-summary-card > p { margin: 16px 0 5px; color: rgba(228,240,255,.72); font-size: 11px; }
+.owner-summary-card > b { display: block; font-size: 25px; letter-spacing: -.035em; }
+.owner-metrics { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; margin-top: 13px; }
+.owner-metrics span { padding: 9px; border: 1px solid rgba(255,255,255,.07); border-radius: 10px; background: rgba(2,15,35,.22); color: rgba(228,240,255,.66); font-size: 9.5px; }
+.owner-metrics strong { display: block; margin-top: 4px; color: rgba(255,255,255,.94); font-size: 12px; }
+.owner-summary-card footer { display: grid; gap: 5px; margin-top: 12px; padding: 0; text-align: left; }
+.owner-summary-card footer > span { font-size: 10.5px; font-weight: 750; }
+.owner-summary-card footer small { overflow: hidden; color: rgba(228,240,255,.66); font-size: 9.5px; text-overflow: ellipsis; white-space: nowrap; }
+.owner-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; padding: 3px 7px; border: 1px solid rgba(118,181,255,.18); border-radius: 999px; background: rgba(74,168,255,.14); color: #a9dcff; font-size: 9.5px; font-weight: 750; white-space: nowrap; }
+.owner-badge[data-owner="熊旭东"], .owner-summary-card[data-owner="熊旭东"] header strong { color: #c9b8ff; }
+.owner-badge[data-owner="张强"], .owner-summary-card[data-owner="张强"] header strong { color: #ffd083; }
+.owner-badge[data-owner="吴鑫"], .owner-summary-card[data-owner="吴鑫"] header strong { color: #8edbff; }
+.owner-badge[data-owner="未分配"], .owner-summary-card[data-owner="未分配"] header strong { color: #c2cad5; }
 
 .toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 13px; }
 .search-box { display: flex; flex: 1 1 220px; align-items: center; min-width: 180px; padding: 8px 11px; border: 1px solid var(--line); border-radius: 10px; background: #fff; color: #99a1ae; }
@@ -203,6 +223,12 @@ button { color: inherit; }
 .pills button:hover { background: #e9ecf2; color: var(--ink); }
 .pills button.active { border-color: #c7d2fe; background: #e8eefc; color: var(--blue); font-weight: 700; }
 .row-count { margin-left: auto; color: var(--sub); font-size: 11.5px; white-space: nowrap; }
+.owner-filter-bar { display: flex; align-items: center; gap: 10px; margin: -2px 0 13px; }
+.owner-filter-bar > span { color: var(--sub); font-size: 11px; font-weight: 700; white-space: nowrap; }
+.owner-filter-bar .pills button[data-owner="熊旭东"] { color: #c9b8ff; }
+.owner-filter-bar .pills button[data-owner="张强"] { color: #ffd083; }
+.owner-filter-bar .pills button[data-owner="吴鑫"] { color: #8edbff; }
+.owner-table-cell { text-align: center; }
 .table-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 13px; }
 table { width: 100%; border-collapse: collapse; font-size: 12px; }
 th, td { padding: 11px 12px; border-bottom: 1px solid var(--line); text-align: right; white-space: nowrap; }
@@ -479,7 +505,7 @@ footer { padding: 4px 0 10px; color: #8d96a4; font-size: 11px; text-align: cente
 .reference-theme .legend,
 .reference-theme .bar-label,
 .reference-theme .delta-row > span,
-.reference-theme .rank-list li > span { color: rgba(255,255,255,.78); }
+.reference-theme .rank-company { color: rgba(255,255,255,.78); }
 .reference-theme .bar-row > b,
 .reference-theme .rank-list b { color: rgba(255,255,255,.88); }
 .reference-theme .legend .old,
@@ -594,7 +620,7 @@ footer { padding: 4px 0 10px; color: #8d96a4; font-size: 11px; text-align: cente
   .period-chip span { width: 100%; }
   .content-section { padding: 15px 12px; }
   .bar-row { grid-template-columns: 90px minmax(120px, 1fr) 65px; gap: 7px; }
-  .rank-list li { grid-template-columns: 19px minmax(80px, 1fr) 45px; }
+  .rank-list li { grid-template-columns: 19px minmax(80px, 1fr) 52px 45px; }
   .rank-list li div { display: none; }
   .row-count { width: 100%; margin-left: 0; }
   .ambient-background::before { opacity: .55; }

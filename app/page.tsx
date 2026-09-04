@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { monthlyDashboard, weeklyDashboard, type Company, type Customer, type HistoryPeriod } from "./data";
 
 type Filter = "all" | "new" | "dropped" | "negative" | "down" | "marginDown" | "quality";
-type SortKey = "company" | "w1Sales" | "w2Sales" | "salesDelta" | "w1Margin" | "w2Margin" | "marginDelta" | "custW2";
+type SortKey = "company" | "serviceOwner" | "w1Sales" | "w2Sales" | "salesDelta" | "w1Margin" | "w2Margin" | "marginDelta" | "custW2";
 
 const money = (value: number) => `¥${Math.round(value).toLocaleString("zh-CN")}`;
 const signedMoney = (value: number) => `${value > 0 ? "+" : value < 0 ? "−" : ""}${money(Math.abs(value))}`;
@@ -83,7 +83,8 @@ function MarginRank({ high, companies }: { high: boolean; companies: Company[] }
   const max = Math.max(...rows.map(currentMargin), 0.01);
   return <ol className="rank-list">
     {rows.map((item, index) => <li key={item.company}>
-      <em>{index + 1}</em><span title={item.company}>{item.company}</span>
+      <em>{index + 1}</em><span className="rank-company" title={item.company}>{item.company}</span>
+      <span className="owner-badge" data-owner={item.serviceOwner}>{item.serviceOwner}</span>
       <div><i className={high ? "rank-high" : "rank-low"} style={{ width: `${Math.max(3, currentMargin(item) / max * 100)}%` }} /></div>
       <b>{percent(currentMargin(item))}</b>
     </li>)}
@@ -110,6 +111,7 @@ export default function Home() {
   const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<Filter>("all");
+  const [ownerFilter, setOwnerFilter] = useState("all");
   const [sortKey, setSortKey] = useState<SortKey>("w2Sales");
   const [ascending, setAscending] = useState(false);
   const activeBackground = backgrounds[background];
@@ -130,6 +132,30 @@ export default function Home() {
     w1MarginAmount: sum.w1MarginAmount + item.w1MarginAmount,
     w2MarginAmount: sum.w2MarginAmount + item.w2MarginAmount,
   }), { w1Sales: 0, w2Sales: 0, w1MarginAmount: 0, w2MarginAmount: 0 });
+  const serviceOwners = [...new Set(companies.map((item) => item.serviceOwner))]
+    .sort((a, b) => a === "未分配" ? 1 : b === "未分配" ? -1 : a.localeCompare(b, "zh-CN"));
+  const ownerSummaries = serviceOwners.map((owner) => {
+    const ownerCompanies = companies.filter((item) => item.serviceOwner === owner);
+    const summary = ownerCompanies.reduce((sum, item) => ({
+      w1Sales: sum.w1Sales + item.w1Sales,
+      w2Sales: sum.w2Sales + item.w2Sales,
+      w1MarginAmount: sum.w1MarginAmount + item.w1MarginAmount,
+      w2MarginAmount: sum.w2MarginAmount + item.w2MarginAmount,
+    }), { w1Sales: 0, w2Sales: 0, w1MarginAmount: 0, w2MarginAmount: 0 });
+    const topContributor = [...ownerCompanies]
+      .filter((item) => item.w2MarginAmount > 0)
+      .sort((a, b) => b.w2MarginAmount - a.w2MarginAmount)[0];
+    const riskCount = ownerCompanies.filter((item) => item.w2Sales > 0 && (currentMargin(item) < 0 || (isComparableCompany(item) && companyMarginDelta(item) < 0))).length;
+    return {
+      owner,
+      ...summary,
+      marginRate: summary.w2Sales ? summary.w2MarginAmount / summary.w2Sales : 0,
+      marginChange: ratioChange(summary.w2MarginAmount * currentScale, summary.w1MarginAmount),
+      companyCount: ownerCompanies.filter((item) => item.w2Sales > 0).length,
+      topContributor: topContributor?.company ?? "无",
+      riskCount,
+    };
+  });
   const previousMarginRate = totals.w1Sales ? totals.w1MarginAmount / totals.w1Sales : 0;
   const currentMarginRate = totals.w2Sales ? totals.w2MarginAmount / totals.w2Sales : 0;
   const previousCompanyCount = companies.filter((item) => item.w1Sales > 0).length;
@@ -190,7 +216,8 @@ export default function Home() {
         || (filter === "down" && isComparableCompany(item) && item.w2Sales * currentScale < item.w1Sales)
         || (filter === "marginDown" && isComparableCompany(item) && companyMarginDelta(item) < 0)
         || (filter === "quality" && hasZeroMarginWithSales(item));
-      return byQuery && byFilter;
+      const byOwner = ownerFilter === "all" || item.serviceOwner === ownerFilter;
+      return byQuery && byFilter && byOwner;
     });
     return match.sort((a, b) => {
       const av = sortKey === "salesDelta" ? a.w2Sales * currentScale - a.w1Sales : sortKey === "marginDelta" ? companyMarginDelta(a)
@@ -202,7 +229,7 @@ export default function Home() {
       const result = typeof av === "string" ? av.localeCompare(String(bv), "zh-CN") : Number(av) - Number(bv);
       return ascending ? result : -result;
     });
-  }, [query, filter, sortKey, ascending, companies, currentScale]);
+  }, [query, filter, ownerFilter, sortKey, ascending, companies, currentScale]);
 
   const sortBy = (key: SortKey) => {
     if (key === sortKey) setAscending((value) => !value);
@@ -214,6 +241,7 @@ export default function Home() {
     setSelectedCompany(null);
     setQuery("");
     setFilter("all");
+    setOwnerFilter("all");
     setSortKey("w2Sales");
     setAscending(false);
   };
@@ -223,7 +251,7 @@ export default function Home() {
   const previousCustomers = customerRows.filter((item) => item.w1Sales > 0);
 
   const headers: [SortKey, string][] = [
-    ["company", "客户公司"], ["w1Sales", `${previousLabel}销售额`], ["w2Sales", isPartialMonth ? "本月累计销售额" : `${currentLabel}销售额`], ["salesDelta", isPartialMonth ? "预计月底销售差额" : "销售额环比金额"],
+    ["company", "客户公司"], ["serviceOwner", "客服员"], ["w1Sales", `${previousLabel}销售额`], ["w2Sales", isPartialMonth ? "本月累计销售额" : `${currentLabel}销售额`], ["salesDelta", isPartialMonth ? "预计月底销售差额" : "销售额环比金额"],
     ["w1Margin", `${previousLabel}毛利率`], ["w2Margin", `${currentLabel}毛利率`], ["marginDelta", "毛利率环比(%)"], ["custW2", "下属客户"],
   ];
 
@@ -272,6 +300,19 @@ export default function Home() {
       <p>{alert.label}</p><strong>{alert.value}</strong><span>{alert.detail}</span>
     </button>)}</section>
 
+    <section className="content-section owner-section">
+      <SectionTitle note={`按客服员名下客户公司汇总${currentLabel}销售额、参考毛利额和综合毛利率；点击卡片可筛选明细`}>客服员毛利汇总</SectionTitle>
+      <div className="owner-summary-grid">
+        {ownerSummaries.map((item) => <button type="button" className={`owner-summary-card ${ownerFilter === item.owner ? "active" : ""}`} data-owner={item.owner} key={item.owner} onClick={() => setOwnerFilter((value) => value === item.owner ? "all" : item.owner)} aria-pressed={ownerFilter === item.owner}>
+          <header><strong>{item.owner}</strong><span>{item.companyCount} 家公司</span></header>
+          <p>{isPartialMonth ? "本月累计参考毛利额" : `${currentLabel}参考毛利额`}</p>
+          <b>{money(item.w2MarginAmount)}</b>
+          <div className="owner-metrics"><span>销售额<strong>{money(item.w2Sales)}</strong></span><span>综合毛利率<strong>{percent(item.marginRate)}</strong></span></div>
+          <footer><span className={item.marginChange >= 0 ? "up" : "down"}>{signed(item.marginChange * 100)} {isPartialMonth ? "预计月度环比" : comparisonLabel}</span><small>贡献最大：{item.topContributor} · 风险 {item.riskCount} 家</small></footer>
+        </button>)}
+      </div>
+    </section>
+
     <section className="content-section">
       <SectionTitle note={`每次导入新${isMonthly ? "月报" : "周报"}后自动追加，最多显示最近 12 ${isMonthly ? "个月" : "期"}`}>历史经营趋势</SectionTitle>
       <HistoryTrend history={dashboard.history} mode={mode} />
@@ -294,9 +335,10 @@ export default function Home() {
         <div className="pills">{filters.map((item) => <button type="button" key={item.key} className={filter === item.key ? "active" : ""} onClick={() => setFilter(item.key)}>{item.label}</button>)}</div>
         <span className="row-count">共 {rows.length} 家公司</span>
       </div>
+      <div className="owner-filter-bar" aria-label="按客服员筛选"><span>客服员</span><div className="pills"><button type="button" className={ownerFilter === "all" ? "active" : ""} onClick={() => setOwnerFilter("all")}>全部</button>{serviceOwners.map((owner) => <button type="button" data-owner={owner} key={owner} className={ownerFilter === owner ? "active" : ""} onClick={() => setOwnerFilter(owner)}>{owner}</button>)}</div></div>
       <div className="table-scroll"><table><thead><tr>{headers.map(([key, label]) => <th key={key}><button type="button" onClick={() => sortBy(key)}>{label}<span>{sortKey === key ? ascending ? "↑" : "↓" : "↕"}</span></button></th>)}<th>状态</th></tr></thead>
         <tbody>{rows.map((item) => { const change = item.w2Sales * currentScale - item.w1Sales; const itemStatus = status(item, currentScale); return <tr className="clickable-row" key={item.company} tabIndex={0} aria-label={`查看${item.company}详情`} onClick={() => setSelectedCompany(item)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); setSelectedCompany(item); } }}>
-          <td title={item.company}>{item.company}</td><td>{money(item.w1Sales)}</td><td><strong>{money(item.w2Sales)}</strong></td>
+          <td title={item.company}>{item.company}</td><td className="owner-table-cell"><span className="owner-badge" data-owner={item.serviceOwner}>{item.serviceOwner}</span></td><td>{money(item.w1Sales)}</td><td><strong>{money(item.w2Sales)}</strong></td>
           <td className={change > 0 ? "up" : change < 0 ? "down" : "flat"}>{signedMoney(change)}</td>
           <td>{percent(previousMargin(item))}</td><td>{percent(currentMargin(item))}</td><td className={companyMarginDelta(item) > 0 ? "up" : companyMarginDelta(item) < 0 ? "down" : "flat"}>{isNewCompany(item) ? "—" : signed(companyMarginDelta(item), 2)}</td>
           <td>{previousCustomerCount(item) === currentCustomerCount(item) ? currentCustomerCount(item) : `${previousCustomerCount(item)}→${currentCustomerCount(item)}`}</td><td><div className="status-stack"><span className={`status-tag status-${itemStatus}`}>{itemStatus}</span>{hasZeroMarginWithSales(item) && <span className="quality-tag">待核查</span>}</div></td>
@@ -311,7 +353,7 @@ export default function Home() {
           <div><p>COMPANY DEEP DIVE</p><h2 id="company-detail-title">{selectedCompany.company}</h2></div>
           <button type="button" onClick={() => setSelectedCompany(null)} aria-label="关闭公司详情">×</button>
         </div>
-        <div className="drawer-status-group"><span className={`drawer-status status-tag status-${status(selectedCompany, currentScale)}`}>{status(selectedCompany, currentScale)}</span>{hasZeroMarginWithSales(selectedCompany) && <span className="quality-tag">销售有数据 · 毛利额为 0 · 待核查</span>}</div>
+        <div className="drawer-status-group"><span className="owner-badge" data-owner={selectedCompany.serviceOwner}>客服员：{selectedCompany.serviceOwner}</span><span className={`drawer-status status-tag status-${status(selectedCompany, currentScale)}`}>{status(selectedCompany, currentScale)}</span>{hasZeroMarginWithSales(selectedCompany) && <span className="quality-tag">销售有数据 · 毛利额为 0 · 待核查</span>}</div>
         <div className="drawer-metrics">
           <div><span>{isPartialMonth ? "本月累计销售额" : `${currentLabel}销售额`}</span><strong>{money(selectedCompany.w2Sales)}</strong></div>
           <div><span>{isPartialMonth ? "预计月底变化" : "销售额环比"}</span><strong className={selectedCompany.w2Sales * currentScale >= selectedCompany.w1Sales ? "up" : "down"}>{selectedCompany.w1Sales ? signed((selectedCompany.w2Sales * currentScale / selectedCompany.w1Sales - 1) * 100) : "新增"}</strong></div>
